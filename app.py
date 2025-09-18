@@ -28,15 +28,15 @@ def author():
             </body>
          </html>"""
 
-@app.route("/image")
+@app.route('/image')
 def image():
     path = url_for("static", filename="oak.jpg")
-    return """
+    return '''
 <!doctype html>
 <html>
     <body>
-        <hl>дуб</hl>
+        <hl>Дуб</hl>
         <img scr="''' + path + '''">
     </body>
 </html>
-"""
+'''
