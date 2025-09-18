@@ -68,7 +68,7 @@ def counter():
 def info():
     return redirect("/author")
 
-@app.route("/created")
+@app.route("/lab1/created")
 def created():
     return '''
 <!doctype html>
@@ -79,3 +79,9 @@ def created():
     </body>
 </html>
 ''', 201
+
+app = Flask(__name__)
+
+@app.errorhandler(404)
+def not_found(err):
+    return "нет такой страницы", 404
