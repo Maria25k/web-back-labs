@@ -36,7 +36,21 @@ def image():
 <html>
     <body>
         <hl>Дуб</hl>
-        <img scr="''' + path + '''">
+        <img src="''' + path + '''">
+    </body>
+</html>
+'''
+
+count = 0
+@app.route('/counter')
+def counter():
+    global count
+    count += 1
+    return '''
+<!doctype html>
+<html>
+    <body>
+        Сколько раз вы сюда заходили: ''' + str(count) + '''
     </body>
 </html>
 '''
