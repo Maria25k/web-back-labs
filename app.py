@@ -175,3 +175,11 @@ def not_found(err):
     </body>
     </html>
     """, 404
+
+@app.errorhandler(500)
+def internal_error(err):
+    return "Внутренняя ошибка сервера. Мы уже работаем над этим!", 500
+
+@app.route('/break')
+def break_server():
+    return 1 / 0  # Вызовет 500 ошибку
