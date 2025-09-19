@@ -1,0 +1,18 @@
+css
+
+body {
+    background-color: rgb(230, 180, 173);
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+img {
+    width: 400px;
+    height: auto;
+    border: 5px solid rgb(100, 0, 75);
+    border-radius: 10px;
+}
+
+h1 {
+    color: rgb(22, 0, 100);
+}
