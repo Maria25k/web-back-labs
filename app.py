@@ -131,3 +131,29 @@ def lab1():
     </body>
     </html>
     """
+
+@app.route('/400')
+def bad_request():
+    return "400 Bad Request: Неверный запрос", 400
+
+@app.route('/401')
+def unauthorized():
+    return "401 Unauthorized: Требуется аутентификация", 401
+
+@app.route('/402')
+def payment_required():
+    return "402 Payment Required: Требуется оплата", 402
+
+@app.route('/403')
+def forbidden():
+    return "403 Forbidden: Доступ запрещен", 403
+
+@app.route('/405')
+def method_not_allowed():
+    return "405 Method Not Allowed: Метод не разрешен", 405
+
+@app.route('/418')
+def teapot():
+    return "418 I'm a teapot: Я чайник", 418
+
+# ... и так далее для 402, 403, 405, 418
