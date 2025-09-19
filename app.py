@@ -13,7 +13,7 @@ def web():
         </html>""", 200, {
             'X-Server': 'sample',
             'Content-Type': 'text/plain; charset=utf-8'
-        }                                           
+        }                                          
 
 @app.route("/author")
 def author():
@@ -31,21 +31,24 @@ def author():
             </body>
          </html>"""
 
-@app.route('/image')
+@app.route('/lab1/image')
 def image():
-    path = url_for("static", filename="oak.jpg")
-    return '''
-<!doctype html>
-<html>
-    <body>
-        <hl>Дуб</hl>
-        <img src="''' + path + '''">
-    </body>
-</html>
-'''
+    path = url_for('static', filename='oak.jpg')
+    return f'''
+    <!doctype html>
+    <html>
+        <head>
+            <link rel="stylesheet" href="{url_for('static', filename='lab1.css')}?v=2">
+        </head>
+        <body>
+            <h1>Дуб</h1>
+            <img src="{path}">
+        </body>
+    </html>
+    '''
 
 count = 0
-@app.route('/counter')
+@app.route('/lab1/counter')
 def counter():
     global count
     count += 1
@@ -62,6 +65,7 @@ def counter():
         Дата и время: ''' + time.strftime('%Y-%m-%d %H:%M:%S') + '''<br>
         Запрошенный адрес: ''' + url + '''<br>
         Ваш IP адрес: ''' + client_ip + '''<br>
+        <p><a href="/lab1/counter/clear">Сбросить счётчик</a></p>
     </body>
 </html>
 '''
@@ -85,3 +89,9 @@ def created():
 @app.errorhandler(404)
 def not_found(err):
     return "нет такой страницы", 404
+
+@app.route('/lab1/counter/clear')
+def clear_counter():
+    global count
+    count = 0
+    return "Счётчик сброшен. <a href='/lab1/counter'>Вернуться</a>"
