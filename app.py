@@ -95,3 +95,24 @@ def clear_counter():
     global count
     count = 0
     return "Счётчик сброшен. <a href='/lab1/counter'>Вернуться</a>"
+
+@app.route('/')
+@app.route('/index')
+def index():
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>HTTP, ФБ, Лабораторные работы</title>
+    </head>
+    <body>
+        <h1>HTTP, ФБ, WEB-программирование, часть 2. Список лабораторных</h1>
+        <ul>
+            <li><a href="/lab1">Первая лабораторная</a></li>
+        </ul>
+        <footer>
+            <p>Юсупова Мария Леонидовна, ФБИ-34, 3 курс, 2025 год</p>
+        </footer>
+    </body>
+    </html>
+    """
