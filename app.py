@@ -34,18 +34,19 @@ def author():
 @app.route('/lab1/image')
 def image():
     path = url_for('static', filename='oak.jpg')
-    return f'''
-    <!doctype html>
-    <html>
-        <head>
-            <link rel="stylesheet" href="{url_for('static', filename='lab1.css')}?v=2">
-        </head>
-        <body>
-            <h1>Дуб</h1>
-            <img src="{path}">
-        </body>
+    headers = {
+        'Content-Language': 'ru',
+        'X-Custom-Header': 'Hello',
+        'X-Another-Header': 'World'
+    }
+    return f"""
+    <!DOCTYPE html>
+    <html><h1>Дуб</h1>
+    <body>
+        <img src="{path}">
+    </body>
     </html>
-    '''
+    """, 200, headers
 
 count = 0
 @app.route('/lab1/counter')
@@ -183,3 +184,4 @@ def internal_error(err):
 @app.route('/break')
 def break_server():
     return 1 / 0  # Вызовет 500 ошибку
+
