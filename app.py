@@ -156,4 +156,22 @@ def method_not_allowed():
 def teapot():
     return "418 I'm a teapot: Я чайник", 418
 
-# ... и так далее для 402, 403, 405, 418
+@app.errorhandler(404)
+def not_found(err):
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>404 - Страница не найдена</title>
+        <style>
+            body { text-align: center; padding: 50px; }
+            h1 { color: red; }
+        </style>
+    </head>
+    <body>
+        <h1>Ой! Страница не найдена.</h1>
+        <p>Вернитесь на <a href="/">главную</a>.</p>
+        <img src="/static/oak1.jpg" width="300">
+    </body>
+    </html>
+    """, 404
