@@ -289,3 +289,7 @@ def not_found(err):
     </html>
     """, 404
 
+
+@app.route('/lab2/a/')
+def a():
+    return 'ok'
