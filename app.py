@@ -293,3 +293,7 @@ def not_found(err):
 @app.route('/lab2/a/')
 def a():
     return 'ok'
+
+@app.route('/lab2/flowers/<int:flower_id>')
+def flowers(flower_id):
+    return "id=" + str (flower_id)
