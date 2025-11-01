@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Юсупова Мария. {{lab}}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <header>
+        WEB - программирование, часть 2. {{lab}}
+    </header>
+    
+    <main>
+        5 + 2 = {{5+2}}<br> 
+        11 * 28 = {{11 * 28}}<br> 
+        3258 - 759 = {{3258 - 759}}<br> 
+        8452/793 = {{8452/793}}<br> 
+        45<sup>8</sup> = {{45**8}}<br>
+    </main>
+
+    <footer>
+        &copy: {{ name }}, {{group}}, {{kurs}}, 2025
+    </footer>    
+</body>
+</html>
