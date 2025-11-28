@@ -340,3 +340,22 @@ def show_flower(flower_id):
                          flower_id=flower_id,
                          total=len(flower_list))
 
+@app.route('/lab2/calc/')
+def calc_default():
+    return redirect('/lab2/calc/1/1')
+
+@app.route('/lab2/calc/<int:a>')
+def calc_single(a):
+    return redirect(f'/lab2/calc/{a}/1')
+
+@app.route('/lab2/calc/<int:a>/<int:b>')
+def calc(a, b):
+    operations = {
+        'Сумма': a + b,
+        'Разность': a - b,
+        'Произведение': a * b,
+        'Частное': a / b if b != 0 else 'Деление на ноль невозможно!',
+        'Степень': a ** b
+    }
+    return render_template('calc.html', a=a, b=b, operations=operations)
+

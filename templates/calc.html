@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор</title>
+</head>
+<body>
+    <h1>Калькулятор</h1>
+    
+    <p>Число A: {{ a }}</p>
+    <p>Число B: {{ b }}</p>
+    
+    <h2>Результаты операций:</h2>
+    <ul>
+        {% for operation, result in operations.items() %}
+        <li>{{ operation }}: {{ result }}</li>
+        {% endfor %}
+    </ul>
+    
+    <p>
+        <a href="/lab2/">Назад к лабораторной 2</a>
+    </p>
+</body>
+</html>
