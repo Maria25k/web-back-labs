@@ -1,19 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Все цветы</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление цветами</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .flower-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .flower-name {
+            font-weight: bold;
+        }
+        .flower-price {
+            color: #666;
+        }
+        .delete-link {
+            color: red;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        .clear-all {
+            display: block;
+            margin: 20px 0;
+            color: red;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .add-form {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: #2196F3;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Список цветов</h1>
-    <p>Всего цветов: {{ flowers | length }}</p>
-    
-    <ul>
-    {% for flower in flowers %}
-        <li><a href="/lab2/flowers/{{ loop.index0 }}">{{ flower }}</a></li>
-    {% endfor %}
-    </ul>
-    
-    <a href="/lab2/flowers/clear">Очистить список</a><br>
-    <a href="/lab2/">Назад к лабораторной 2</a>
+    <h1>Управление цветами</h1>
+
+    <!-- Список цветов -->
+    <div class="flowers-list">
+        {% for flower in flowers %}
+        <div class="flower-item">
+            <span class="flower-name">{{ flower.name }}</span>
+            <span class="flower-price"> — {{ flower.price }} руб.</span>
+            <a href="/lab2/flowers/delete/{{ loop.index0 }}" class="delete-link" 
+               onclick="return confirm('Удалить цветок «{{ flower.name }}»?')">
+               удалить
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Кнопка удаления всех -->
+    {% if flowers %}
+    <a href="/lab2/flowers/clear" class="clear-all"
+       onclick="return confirm('Удалить ВСЕ цветы?')">
+       Удалить все цветы
+    </a>
+    {% endif %}
+
+    <!-- Форма добавления -->
+    <div class="add-form">
+        <h3>Добавить новый цветок</h3>
+        <form method="POST" action="/lab2/add_flower">
+            <div class="form-group">
+                <label for="name">Название:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="price">Цена:</label>
+                <input type="number" id="price" name="price" required min="1">
+            </div>
+            
+            <button type="submit">Добавить</button>
+        </form>
+    </div>
+
+    <a href="/lab2/" class="back-link">← Вернуться на главную</a>
 </body>
 </html>

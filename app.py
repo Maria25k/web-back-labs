@@ -271,22 +271,6 @@ def not_found(err):
 def a():
     return 'ok'
 
-flower_list = ['роза', 'тюльпан', 'незабудка', 'ромашка']
-
-@app.route('/lab2/add_flower/<name>') 
-def add_flower(name):
-    flower_list.append (name)
-    return f'''
-<!doctype html>
-<html>
-    <body>
-    <h1>Добавлен новый цветок</h1>
-    <p>Название нового цветка: {name } </p>
-    <p>Всего цветов: {len(flower_list)} </p>
-    <p>Полный список: {flower_list} </p>
-    </body>
-</html>
-'''
 @app.route('/lab2/example')
 def example():
     name, lab_num, group, course = 'Мария Юсупова', 2, 'ФБИ-34', 3
@@ -310,28 +294,37 @@ def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных... "
     return render_template('filter.html', phrase=phrase)
 
-@app.route('/lab2/add_flower/')
-def add_flower_empty():
-    return "Вы не задали имя цветка", 400
+flower_list = [
+    {'name': 'орхидея', 'price': 500},
+    {'name': 'роза', 'price': 6000}
+]
 
 @app.route('/lab2/flowers')
 def show_flowers():
     return render_template('flowers.html', flowers=flower_list)
 
+@app.route('/lab2/add_flower', methods=['POST'])
+def add_flower_post():
+    name = request.form.get('name', '').strip()
+    price = request.form.get('price', '')
+    
+    if name and price:
+        try:
+            flower_list.append({
+                'name': name, 
+                'price': int(price)
+            })
+            return redirect('/lab2/flowers')
+        except ValueError:
+            return "Цена должна быть числом", 400
+    return "Заполните все поля", 400
+
 @app.route('/lab2/flowers/clear')
 def clear_flowers():
-    global flower_list
     flower_list.clear()
-    return '''
-    <!DOCTYPE html>
-    <html>
-    <body>
-        <h1>Список цветов очищен</h1>
-        <a href="/lab2/flowers">Посмотреть все цветы</a><br>
-        <a href="/lab2/">Назад к лабораторной 2</a>
-    </body>
-    </html>
-    '''
+    return redirect('/lab2/flowers')
+
+
 @app.route('/lab2/flowers/<int:flower_id>')
 def show_flower(flower_id):
     if flower_id < 0 or flower_id >= len(flower_list):
@@ -405,3 +398,5 @@ dogs = [
 @app.route('/lab2/dogs')
 def show_dogs():
     return render_template('dogs.html', dogs=dogs)
+
+    
