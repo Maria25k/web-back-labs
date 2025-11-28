@@ -376,3 +376,31 @@ books = [
 @app.route('/lab2/books')
 def show_books():
     return render_template('books.html', books=books)
+
+# Список пород собак
+dogs = [
+    {'name': 'Лабрадор', 'image': 'labrador.jpg', 'description': 'Дружелюбная семейная собака, отличный пловец'},
+    {'name': 'Немецкая овчарка', 'image': 'german_shepherd.jpg', 'description': 'Умная служебная порода, преданный защитник'},
+    {'name': 'Такса', 'image': 'dachshund.jpg', 'description': 'Маленькая охотничья собака с длинным телом'},
+    {'name': 'Бульдог', 'image': 'bulldog.jpg', 'description': 'Коренастая собака с характерной мордой'},
+    {'name': 'Пудель', 'image': 'poodle.jpg', 'description': 'Умная порода с кудрявой шерстью, отличный компаньон'},
+    {'name': 'Бигль', 'image': 'beagle.jpg', 'description': 'Охотничья собака с острым нюхом, очень активная'},
+    {'name': 'Золотистый ретривер', 'image': 'golden_retriever.jpg', 'description': 'Добродушная собака с золотистой шерстью'},
+    {'name': 'Сибирский хаски', 'image': 'husky.jpg', 'description': 'Ездовая собака с голубыми глазами, любит холод'},
+    {'name': 'Доберман', 'image': 'doberman.jpg', 'description': 'Сильная и грациозная служебная порода'},
+    {'name': 'Ротвейлер', 'image': 'rottweiler.jpg', 'description': 'Мощная собака с сильным защитным инстинктом'},
+    {'name': 'Боксёр', 'image': 'boxer.jpg', 'description': 'Энергичная и игривая собака с выразительной мордой'},
+    {'name': 'Джек-рассел-терьер', 'image': 'jack_russell.jpg', 'description': 'Маленькая, но очень активная и смелая собака'},
+    {'name': 'Чихуахуа', 'image': 'chihuahua.jpg', 'description': 'Самая маленькая порода собак в мире'},
+    {'name': 'Шпиц', 'image': 'spitz.jpg', 'description': 'Пушистая собака с лисьей мордочкой'},
+    {'name': 'Мопс', 'image': 'pug.jpg', 'description': 'Маленькая собака с морщинистой мордой и курносым носом'},
+    {'name': 'Колли', 'image': 'collie.jpg', 'description': 'Длинношерстная пастушья собака, известная по фильму "Лесси"'},
+    {'name': 'Далматин', 'image': 'dalmatian.jpg', 'description': 'Собака с уникальным пятнистым окрасом'},
+    {'name': 'Сенбернар', 'image': 'st_bernard.jpg', 'description': 'Крупная спасательная собака, очень добрая'},
+    {'name': 'Шарпей', 'image': 'sharpei.jpg', 'description': 'Собака с многочисленными складками кожи'},
+    {'name': 'Корги', 'image': 'corgi.jpg', 'description': 'Маленькая пастушья собака с короткими лапами'}
+]
+
+@app.route('/lab2/dogs')
+def show_dogs():
+    return render_template('dogs.html', dogs=dogs)
