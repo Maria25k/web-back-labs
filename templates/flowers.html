@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Все цветы</title>
+</head>
+<body>
+    <h1>Список цветов</h1>
+    <p>Всего цветов: {{ flowers | length }}</p>
+    
+    <ul>
+    {% for flower in flowers %}
+        <li><a href="/lab2/flowers/{{ loop.index0 }}">{{ flower }}</a></li>
+    {% endfor %}
+    </ul>
+    
+    <a href="/lab2/flowers/clear">Очистить список</a><br>
+    <a href="/lab2/">Назад к лабораторной 2</a>
+</body>
+</html>

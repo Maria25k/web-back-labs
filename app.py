@@ -87,10 +87,6 @@ def created():
 </html>
 ''', 201
 
-@app.errorhandler(404)
-def not_found(err):
-    return "нет такой страницы", 404
-
 @app.route('/lab1/counter/clear')
 def clear_counter():
     global count
@@ -164,26 +160,6 @@ def method_not_allowed():
 @app.route('/418')
 def teapot():
     return "418 I'm a teapot: Я чайник", 418
-
-@app.errorhandler(404)
-def not_found(err):
-    return """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>404 - Страница не найдена</title>
-        <style>
-            body { text-align: center; padding: 50px; }
-            h1 { color: red; }
-        </style>
-    </head>
-    <body>
-        <h1>Ой! Страница не найдена.</h1>
-        <p>Вернитесь на <a href="/">главную</a>.</p>
-        <img src="/static/oak1.jpg" width="300">
-    </body>
-    </html>
-    """, 404
 
 @app.errorhandler(500)
 def internal_error(err):
@@ -327,3 +303,40 @@ def example():
 @app.route('/lab2/')
 def lab2():
     return render_template ('lab2.html')
+
+@app.route('/lab2/filters')
+def filters():
+    phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных... "
+    return render_template('filter.html', phrase=phrase)
+
+@app.route('/lab2/add_flower/')
+def add_flower_empty():
+    return "Вы не задали имя цветка", 400
+
+@app.route('/lab2/flowers')
+def show_flowers():
+    return render_template('flowers.html', flowers=flower_list)
+
+@app.route('/lab2/flowers/clear')
+def clear_flowers():
+    global flower_list
+    flower_list.clear()
+    return '''
+    <!DOCTYPE html>
+    <html>
+    <body>
+        <h1>Список цветов очищен</h1>
+        <a href="/lab2/flowers">Посмотреть все цветы</a><br>
+        <a href="/lab2/">Назад к лабораторной 2</a>
+    </body>
+    </html>
+    '''
+@app.route('/lab2/flowers/<int:flower_id>')
+def show_flower(flower_id):
+    if flower_id < 0 or flower_id >= len(flower_list):
+        return "Цветок не найден", 404
+    return render_template('flower_detail.html', 
+                         flower=flower_list[flower_id], 
+                         flower_id=flower_id,
+                         total=len(flower_list))
+
