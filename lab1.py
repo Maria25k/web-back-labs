@@ -7,7 +7,8 @@ def author():
     group = "ФБИ-34"
     faculty = "ФБ"
     
-    return """<!doctype html> 
+    return """
+    <!doctype html> 
         <html>
             <body>
                 <p>Студент: """+ name + """</p>

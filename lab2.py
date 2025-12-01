@@ -21,7 +21,7 @@ def example():
                            name=name, lab_num=lab_num, group=group,
                            course=course, fruits=fruits)
 
-# ИЗМЕНИТЕ ИМЯ ФУНКЦИИ С lab2 НА lab (или другое имя)
+# ИЗМЕНИТЕ ИМЯ ФУНКЦИИ С lab2 НА lab
 @lab2.route('/lab2/')
 def lab():  # ← ВАЖНО: измените имя функции!
     return render_template('lab2.html')
