@@ -5,15 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мария Юсупова. {% block lab %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    
+    <style>
+        body {
+            color: {{ request.cookies.get('color', 'black') }};
+            background-color: {{ request.cookies.get('bg_color', 'white') }};
+            font-size: {{ request.cookies.get('font_size', '16px') }};
+            font-family: Arial, sans-serif;
+            {% if request.cookies.get('bold') == 'on' %}
+            font-weight: bold;
+            {% endif %}
+            margin: 0;
+            padding: 20px;
+            transition: all 0.3s ease; /* Плавное изменение */
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: block;
+        }
+        header {
+            background-color: #f0f0f0;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 2px solid #ccc;
+            font-size: 0.9em;
+        }
+        main {
+            min-height: 400px;
+        }
+    </style>
+    
     <link rel="icon" href="{{ url_for('static', filename='my_favicon.jpg') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='my_favicon.gp') }}">
+    
 </head>
 <body>
     <header>
-        WEB-программирование, часть 2. {{ self.lab() }}
-        <nav style="float: right;">
-            <a href="/">Главная</a>
-        </nav>
+        WEB-программирование, часть 2. {{ self.lab() }} | 
+        <a href="/">menu</a> |
+        <a href="/lab3/settings">Настройки</a>
     </header>
 
     <main>
@@ -21,7 +58,7 @@
     </main>
 
     <footer>
-        &copy; Мария Юсупова, ФБИ-34, 3 курс, 2025
+        &copy; Юсупова Мария Леонидовна, ФБИ-34, 3 курс, 2025 год
     </footer>
 </body>
 </html>
