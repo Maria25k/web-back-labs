@@ -14,9 +14,9 @@ not_found_log = []
 @app.route("/")
 @app.route("/index")
 def index():
-    lab1_web = url_for("lab1.lab")
-    lab2_web = url_for("lab2.lab22")
-    lab3_web = url_for("lab3.lab33")
+    lab1 = url_for("lab1")
+    lab2 = url_for("lab2")
+    lab3 = url_for("lab3")
     return """
     <!DOCTYPE html>
     <html>
@@ -131,5 +131,6 @@ def not_found(err):
 
 if __name__ == '__main__':
     app.run(debug=True)
+   
 
     
