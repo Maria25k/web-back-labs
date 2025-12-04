@@ -3,10 +3,18 @@ from flask import Blueprint, render_template, request, make_response, redirect
 lab3 = Blueprint('lab3', __name__)
 
 @lab3.route('/lab3/')
-def lab():
+def lab33():
     name = request.cookies.get('name')
+    age = request.cookies.get('age')
     name_color = request.cookies.get('name_color')
-    return render_template('lab3/lab3.html', name=name, name_color=name_color)
+
+    if not name:
+        name = 'Аноним'
+    if not age:
+        age = 'неизвестен'
+
+    return render_template('lab3/lab3.html', name=name, age=age, name_color=name_color)
+
 
 @lab3.route('/lab3/cookie')
 def cookie():
@@ -110,3 +118,77 @@ def settings_reset():
     resp.delete_cookie('font_size')
     resp.delete_cookie('bold')
     return resp
+
+@lab3.route('/lab3/ticket')
+def ticket():
+    errors = {}
+    
+    # Получаем данные из формы
+    fio = request.args.get('fio')
+    shelf = request.args.get('shelf')
+    linen = request.args.get('linen')
+    luggage = request.args.get('luggage')
+    age = request.args.get('age')
+    departure = request.args.get('departure')
+    destination = request.args.get('destination')
+    date = request.args.get('date')
+    insurance = request.args.get('insurance')
+    
+    # Валидация
+    if fio is not None:
+        if fio.strip() == '':
+            errors['fio'] = 'Заполните ФИО'
+    
+    if age is not None:
+        if age.strip() == '':
+            errors['age'] = 'Заполните возраст'
+        else:
+            try:
+                age_int = int(age)
+                if age_int < 1 or age_int > 120:
+                    errors['age'] = 'Возраст должен быть от 1 до 120 лет'
+            except ValueError:
+                errors['age'] = 'Возраст должен быть числом'
+    
+    if departure is not None and departure.strip() == '':
+        errors['departure'] = 'Заполните пункт выезда'
+    
+    if destination is not None and destination.strip() == '':
+        errors['destination'] = 'Заполните пункт назначения'
+    
+    if date is not None and date.strip() == '':
+        errors['date'] = 'Выберите дату'
+    
+    # Расчет стоимости
+    price = 0
+    if not errors and fio:
+        # Базовая стоимость
+        if age and int(age) < 18:
+            price = 700  # Детский
+        else:
+            price = 1000  # Взрослый
+        
+        # Доплата за полку
+        if shelf in ['lower', 'lower-side']:
+            price += 100
+        
+        # Доплаты
+        if linen == 'on':
+            price += 75
+        if luggage == 'on':
+            price += 250
+        if insurance == 'on':
+            price += 150
+    
+    # Если есть ошибки или форма не отправлена
+    if errors or not request.args:
+        return render_template('lab3/ticket.html',
+                             fio=fio, shelf=shelf, linen=linen, luggage=luggage,
+                             age=age, departure=departure, destination=destination,
+                             date=date, insurance=insurance, errors=errors)
+    
+    # Если все OK - показываем билет
+    return render_template('lab3/ticket.html',
+                         fio=fio, shelf=shelf, linen=linen, luggage=luggage,
+                         age=age, departure=departure, destination=destination,
+                         date=date, insurance=insurance, price=price)

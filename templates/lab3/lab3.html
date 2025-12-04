@@ -6,7 +6,12 @@
     <h1>Формы, cookie</h1>
     
     <div>
-        Привет, <span style="color: {{ name_color or 'black' }}">{{ name or 'неизвестный' }}</span>!
+        Привет, 
+        {% if name %}
+            <span style="color: {{ name_color or 'black' }}">{{ name }}</span>!
+        {% else %}
+            <span>аноним</span>!
+        {% endif %}
     </div>
     
     <div>Ваш возраст: {{ request.cookies.get('age') or 'не указан' }}</div>
@@ -14,9 +19,10 @@
     <h2>Список сделанных страниц:</h2>
     <ol>
         <li><a href="/lab3/cookie">Куки</a></li>
-        <li><a href="/lab3/del_cookie">Очистить куки</a></li>
+        <li><a href="/lab3/del_cookie">Очистить куки имени</a></li>
         <li><a href="/lab3/form1">Форма (GET-запрос)</a></li>
         <li><a href="/lab3/order">Заказ напитка</a></li>
         <li><a href="/lab3/settings">Настройки отображения</a></li>
+        <li><a href="/lab3/ticket">Железнодорожный билет</a></li>
     </ol>
 {% endblock %}
