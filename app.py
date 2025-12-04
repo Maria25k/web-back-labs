@@ -1,8 +1,9 @@
 from flask import Flask, url_for, request, redirect, abort, render_template
+import datetime
 from lab1 import lab1
 from lab2 import lab2
 from lab3 import lab3
-import datetime
+
 
 app = Flask(__name__)
 app.register_blueprint(lab1)
@@ -43,12 +44,10 @@ def internal_error(err):
 
 @app.errorhandler(404)
 def not_found(err):
-    # Получаем информацию о запросе
     client_ip = request.remote_addr
     access_time = datetime.datetime.now()
     requested_url = request.url
     
-    # Добавляем запись в журнал
     log_entry = {
         'ip': client_ip,
         'time': access_time,
@@ -56,7 +55,6 @@ def not_found(err):
     }
     not_found_log.append(log_entry)
     
-    # Формируем HTML-страницу
     return f"""
     <!DOCTYPE html>
     <html>
@@ -122,7 +120,7 @@ def not_found(err):
             <h3> Журнал обращений к несуществующим страницам:</h3>
             {"".join([
                 f'<div class="log-entry">[{entry["time"]}] пользователь {entry["ip"]} зашёл на адрес: {entry["url"]}</div>'
-                for entry in reversed(not_found_log[-20:])  # показываем последние 20 записей
+                for entry in reversed(not_found_log[-20:])  
             ])}
         </div>
     </body>

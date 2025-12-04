@@ -74,7 +74,6 @@
 <body>
     <h1>Управление цветами</h1>
 
-    <!-- Список цветов -->
     <div class="flowers-list">
         {% for flower in flowers %}
         <div class="flower-item">
@@ -88,7 +87,6 @@
         {% endfor %}
     </div>
 
-    <!-- Кнопка удаления всех -->
     {% if flowers %}
     <a href="/lab2/flowers/clear" class="clear-all"
        onclick="return confirm('Удалить ВСЕ цветы?')">
@@ -96,7 +94,6 @@
     </a>
     {% endif %}
 
-    <!-- Форма добавления -->
     <div class="add-form">
         <h3>Добавить новый цветок</h3>
         <form method="POST" action="/lab2/add_flower">

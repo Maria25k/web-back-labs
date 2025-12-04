@@ -1,7 +1,7 @@
 from flask import Blueprint, url_for, redirect, request, abort, render_template
 import datetime
 
-lab2 = Blueprint('lab2', __name__)
+lab2 = Blueprint('lab2', __name__, template_folder='templates/lab2')
 
 @lab2.route('/lab2/a/')
 def a():
@@ -21,9 +21,8 @@ def example():
                            name=name, lab_num=lab_num, group=group,
                            course=course, fruits=fruits)
 
-# ИЗМЕНИТЕ ИМЯ ФУНКЦИИ С lab2 НА lab
 @lab2.route('/lab2/')
-def lab():  # ← ВАЖНО: измените имя функции!
+def lab():
     return render_template('lab2.html')
 
 @lab2.route('/lab2/filters')
@@ -47,7 +46,7 @@ def add_flower_post():
     
     if name and price:
         try:
-            flower_list.append({  # ← ИСПРАВЛЕНО: было flower_list.lab2end
+            flower_list.append({
                 'name': name, 
                 'price': int(price)
             })

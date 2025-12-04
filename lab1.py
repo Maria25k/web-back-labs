@@ -1,5 +1,19 @@
-from flask import Blueprint, request, url_for
+from flask import Blueprint, request, url_for, redirect
+import datetime
 lab1 = Blueprint ('lab1', __name__)                                      
+
+@lab1.route("/lab1/web")
+def web():
+    return """
+    <!doctype html> 
+    <html>
+        <body>
+            <h1>WEB</h1>
+            <p>Flask — фреймворк для создания веб-приложений на языке программирования Python...</p>
+            <a href="/lab1/author">Автор</a>
+        </body>
+    </html>
+    """
 
 @lab1.route("/lab1/author")
 def author():
@@ -20,7 +34,7 @@ def author():
 
 @lab1.route('/lab1/image')
 def image():
-    path = url_for('static', filename='oak.jpg')
+    path = url_for('static', filename='lab1/oak.jpg')
     headers = {
         'Content-Language': 'ru',
         'X-Custom-Header': 'Hello',
@@ -28,14 +42,17 @@ def image():
     }
     return f"""
     <!DOCTYPE html>
-    <html><h1>Дуб</h1>
-    <body>
-        <img src="{path}">
-    </body>
+    <html>
+        <h1>Дуб</h1>
+        <body>
+            <img src="{path}" alt="Дуб" width="300">
+        </body>
     </html>
     """, 200, headers
 
 count = 0
+
+
 @lab1.route('/lab1/counter')
 def counter():
     global count
