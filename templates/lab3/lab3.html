@@ -9,9 +9,12 @@
         Привет, <span style="color: {{ name_color or 'black' }}">{{ name or 'неизвестный' }}</span>!
     </div>
     
-    <div>Список сделанных страниц:</div>
+    <div>Ваш возраст: {{ request.cookies.get('age') or 'не указан' }}</div>
+    
+    <h2>Список сделанных страниц:</h2>
     <ol>
         <li><a href="/lab3/cookie">Куки</a></li>
         <li><a href="/lab3/del_cookie">Очистить куки</a></li>
+        <li><a href="/lab3/form1">Форма (GET-запрос)</a></li>
     </ol>
 {% endblock %}
