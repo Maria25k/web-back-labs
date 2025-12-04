@@ -192,3 +192,109 @@ def ticket():
                          fio=fio, shelf=shelf, linen=linen, luggage=luggage,
                          age=age, departure=departure, destination=destination,
                          date=date, insurance=insurance, price=price)
+
+
+products = [
+    {'name': 'iPhone 15', 'price': 89990, 'brand': 'Apple', 'color': 'черный'},
+    {'name': 'Samsung Galaxy S24', 'price': 79990, 'brand': 'Samsung', 'color': 'белый'},
+    {'name': 'Xiaomi 14', 'price': 59990, 'brand': 'Xiaomi', 'color': 'синий'},
+    {'name': 'Google Pixel 8', 'price': 69990, 'brand': 'Google', 'color': 'серый'},
+    {'name': 'OnePlus 11', 'price': 54990, 'brand': 'OnePlus', 'color': 'зеленый'},
+    {'name': 'Sony Xperia 5 V', 'price': 89990, 'brand': 'Sony', 'color': 'черный'},
+    {'name': 'Nothing Phone 2', 'price': 44990, 'brand': 'Nothing', 'color': 'белый'},
+    {'name': 'Realme GT 3', 'price': 39990, 'brand': 'Realme', 'color': 'желтый'},
+    {'name': 'Honor Magic 5', 'price': 64990, 'brand': 'Honor', 'color': 'синий'},
+    {'name': 'iPhone 14', 'price': 69990, 'brand': 'Apple', 'color': 'фиолетовый'},
+    {'name': 'Samsung Galaxy A54', 'price': 29990, 'brand': 'Samsung', 'color': 'черный'},
+    {'name': 'Xiaomi Redmi Note 13', 'price': 19990, 'brand': 'Xiaomi', 'color': 'белый'},
+    {'name': 'Google Pixel 7a', 'price': 39990, 'brand': 'Google', 'color': 'зеленый'},
+    {'name': 'Nokia G42', 'price': 17990, 'brand': 'Nokia', 'color': 'фиолетовый'},
+    {'name': 'Motorola Edge 40', 'price': 34990, 'brand': 'Motorola', 'color': 'синий'},
+    {'name': 'Asus Zenfone 10', 'price': 59990, 'brand': 'Asus', 'color': 'черный'},
+    {'name': 'iPhone SE 2022', 'price': 44990, 'brand': 'Apple', 'color': 'красный'},
+    {'name': 'Samsung Galaxy Z Flip5', 'price': 99990, 'brand': 'Samsung', 'color': 'фиолетовый'},
+    {'name': 'Xiaomi 13T', 'price': 49990, 'brand': 'Xiaomi', 'color': 'черный'},
+    {'name': 'OnePlus Nord 3', 'price': 34990, 'brand': 'OnePlus', 'color': 'зеленый'},
+    {'name': 'iPhone 13 mini', 'price': 59990, 'brand': 'Apple', 'color': 'синий'},
+    {'name': 'Samsung Galaxy S23 FE', 'price': 54990, 'brand': 'Samsung', 'color': 'белый'},
+    {'name': 'Google Pixel 6a', 'price': 29990, 'brand': 'Google', 'color': 'черный'},
+    {'name': 'Xiaomi Poco F5', 'price': 29990, 'brand': 'Xiaomi', 'color': 'синий'},
+    {'name': 'Nothing Phone 1', 'price': 29990, 'brand': 'Nothing', 'color': 'белый'}
+]
+
+@lab3.route('/lab3/products')
+def products_search():
+    min_price = request.args.get('min_price')
+    max_price = request.args.get('max_price')
+    action = request.args.get('action')  
+    
+    if action == 'reset':
+        resp = make_response(redirect('/lab3/products'))
+        resp.delete_cookie('min_price')
+        resp.delete_cookie('max_price')
+        return resp
+    
+    if min_price is not None or max_price is not None:
+        resp = make_response(redirect('/lab3/products'))
+        if min_price:
+            resp.set_cookie('min_price', min_price)
+        else:
+            resp.delete_cookie('min_price')
+        
+        if max_price:
+            resp.set_cookie('max_price', max_price)
+        else:
+            resp.delete_cookie('max_price')
+        
+        return resp
+    
+    min_price = request.cookies.get('min_price')
+    max_price = request.cookies.get('max_price')
+    
+    min_price_int = None
+    max_price_int = None
+    
+    if min_price:
+        try:
+            min_price_int = int(min_price)
+        except ValueError:
+            min_price_int = None
+    
+    if max_price:
+        try:
+            max_price_int = int(max_price)
+        except ValueError:
+            max_price_int = None
+    
+    filtered_products = []
+    
+    if min_price_int is not None or max_price_int is not None:
+        for product in products:
+            price = product['price']
+            
+            if min_price_int is not None and price < min_price_int:
+                continue
+            
+            if max_price_int is not None and price > max_price_int:
+                continue
+            
+            filtered_products.append(product)
+    else:
+        filtered_products = products.copy()
+    
+    if min_price_int is not None and max_price_int is not None and min_price_int > max_price_int:
+        min_price_int, max_price_int = max_price_int, min_price_int
+        min_price, max_price = max_price, min_price
+    
+    all_prices = [p['price'] for p in products]
+    global_min_price = min(all_prices)
+    global_max_price = max(all_prices)
+    
+    return render_template('lab3/products.html',
+                         products=filtered_products,
+                         min_price=min_price,
+                         max_price=max_price,
+                         global_min_price=global_min_price,
+                         global_max_price=global_max_price,
+                         count=len(filtered_products),
+                         total=len(products))
