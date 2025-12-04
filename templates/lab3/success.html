@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <h1>Спасибо за заказ!</h1>
+    
+    <div style="font-size: 1.2em; margin: 20px 0;">
+        Ваш заказ оплачен на сумму <strong>{{ price }} рублей</strong>.
+    </div>
+    
+    <div style="margin: 20px 0;">
+        Ожидайте доставку! Наш курьер свяжется с вами в ближайшее время.
+    </div>
+    
+    <div>
+        <a href="/lab3/order">Сделать новый заказ</a>
+    </div>
+{% endblock %}

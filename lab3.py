@@ -37,3 +37,37 @@ def form1():
     if sex == '':
         errors['sex'] = 'Заполните поле!'
     return render_template('lab3/form1.html', user=user, age=age, sex=sex, errors=errors)
+
+@lab3.route('/lab3/order')
+def order():
+    return render_template('lab3/order.html')
+
+@lab3.route('/lab3/pay')
+def pay():
+    # Получаем параметры из формы
+    drink = request.args.get('drink')
+    milk = request.args.get('milk')
+    sugar = request.args.get('sugar')
+    
+    # Рассчитываем стоимость
+    price = 0
+    
+    # Стоимость напитка
+    if drink == 'cofee':
+        price = 120
+    elif drink == 'black-tea':
+        price = 80
+    elif drink == 'green-tea':
+        price = 70
+    
+    if milk == 'on':
+        price += 30
+    if sugar == 'on':
+        price += 10
+    
+    return render_template('lab3/pay.html', price=price)
+
+@lab3.route('/lab3/success')
+def success():
+    price = request.args.get('price') or "0"
+    return render_template('lab3/success.html', price=price)
