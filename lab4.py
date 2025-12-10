@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, redirect, session
 
 lab4 = Blueprint('lab4', __name__)
 
-# ===== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ =====
 tree_count = 0
 users = [
     {'login': 'alex', 'password': '123', 'name': 'Александр Петров', 'gender': 'М'},
@@ -11,12 +10,10 @@ users = [
     {'login': 'maria', 'password': '888', 'name': 'Мария Кузнецова', 'gender': 'Ж'}
 ]
 
-# ===== ГЛАВНАЯ СТРАНИЦА LAB4 =====
 @lab4.route('/lab4/')
 def lab():
     return render_template('lab4/lab4.html')
 
-# ===== ДЕЛЕНИЕ =====
 @lab4.route('/lab4/div-form')
 def div_form():
     return render_template('lab4/div-form.html')
@@ -41,7 +38,6 @@ def div():
     result = x1 / x2
     return render_template('lab4/div.html', x1=x1, x2=x2, result=result)
 
-# ===== СУММИРОВАНИЕ =====
 @lab4.route('/lab4/sum-form')
 def sum_form():
     return render_template('lab4/sum-form.html')
@@ -57,7 +53,6 @@ def sum():
     result = x1 + x2
     return render_template('lab4/sum.html', x1=x1, x2=x2, result=result)
 
-# ===== УМНОЖЕНИЕ =====
 @lab4.route('/lab4/mul-form')
 def mul_form():
     return render_template('lab4/mul-form.html')
@@ -73,7 +68,6 @@ def mul():
     result = x1 * x2
     return render_template('lab4/mul.html', x1=x1, x2=x2, result=result)
 
-# ===== ВЫЧИТАНИЕ =====
 @lab4.route('/lab4/sub-form')
 def sub_form():
     return render_template('lab4/sub-form.html')
@@ -95,7 +89,6 @@ def sub():
     result = x1 - x2
     return render_template('lab4/sub.html', x1=x1, x2=x2, result=result)
 
-# ===== ВОЗВЕДЕНИЕ В СТЕПЕНЬ =====
 @lab4.route('/lab4/pow-form')
 def pow_form():
     return render_template('lab4/pow-form.html')
@@ -120,7 +113,6 @@ def power():
     result = x1 ** x2
     return render_template('lab4/pow.html', x1=x1, x2=x2, result=result)
 
-# ===== ДЕРЕВЬЯ =====
 @lab4.route('/lab4/tree', methods=['GET', 'POST'])
 def tree():
     global tree_count
@@ -139,62 +131,31 @@ def tree():
     
     return redirect('/lab4/tree')
 
-# ===== АВТОРИЗАЦИЯ =====
 @lab4.route('/lab4/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        if 'login' in session:
-            authorized = True
-            login_user = session['login']
-            user_name = session.get('name', login_user)
-        else:
-            authorized = False
-            login_user = ''
-            user_name = ''
-        
-        return render_template('lab4/login.html', 
-                               authorized=authorized, 
-                               login=login_user,
-                               name=user_name,
-                               error='')
-    
-    # POST-запрос
-    login_user = request.form.get('login', '').strip()
-    password = request.form.get('password', '').strip()
-    
-    if not login_user:
-        return render_template('lab4/login.html', 
-                               authorized=False, 
-                               login=login_user,
-                               name='',
-                               error='Не введён логин')
-    
-    if not password:
-        return render_template('lab4/login.html', 
-                               authorized=False, 
-                               login=login_user,
-                               name='',
-                               error='Не введён пароль')
-    
-    # Поиск пользователя
-    user_found = None
-    for user in users:
-        if user['login'] == login_user and user['password'] == password:
-            user_found = user
-            break
-    
-    if user_found:
-        session['login'] = login_user
-        session['name'] = user_found['name']
-        return redirect('/lab4/login')
-    
-    return render_template('lab4/login.html', 
-                           authorized=False, 
-                           login=login_user,
-                           name='',
-                           error='Неверные логин и/или пароль')
+        authorized = 'user_name' in session
+        user_name = session.get('user_name', '')
+        return render_template('lab4/login.html', authorized=authorized, user_name=user_name)
 
-# ===== ВЫХОД =====
+    login = request.form.get('login', '').strip()
+    password = request.form.get('password', '')
+
+
+    if login == '':
+        return render_template('lab4/login.html', error='Не введён логин', login_value=login)
+
+    if password == '':
+        return render_template('lab4/login.html', error='Не введён пароль', login_value=login)
+
+    for user in users:
+        if login == user['login'] and password == user['password']:
+            session['user_name'] = user['name']
+            return redirect('/lab4/login')
+
+    return render_template('lab4/login.html', error='Неверные логин и/или пароль', login_value=login)
+
+
 @lab4.route('/lab4/logout', methods=['POST'])
 def logout():
     session.pop('login', None)
