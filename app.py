@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for  # ← ДОБАВЬ url_for
+from flask import Flask, render_template, url_for 
 import datetime
 from lab1 import lab1
 from lab2 import lab2
