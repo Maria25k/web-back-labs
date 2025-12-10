@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block lab %}Пользователи{% endblock %}
+{% block main %}
+
+<h1>Список пользователей</h1>
+
+<table border="1" cellpadding="6">
+    <tr>
+        <th>Имя</th>
+        <th>Логин</th>
+        <th>Действия</th>
+    </tr>
+    {% for u in users %}
+    <tr>
+        <td>{{ u.name }}</td>
+        <td>{{ u.login }}</td>
+        <td>
+            {% if me_login and u.login == me_login %}
+                <form action="/lab4/delete_self" method="post" style="display:inline;">
+                    <button type="submit" onclick="return confirm('Вы действительно хотите удалить себя?');">Удалить себя</button>
+                </form>
+                <form action="/lab4/edit" method="get" style="display:inline;">
+                    <button type="submit">Редактировать</button>
+                </form>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="/lab4/">Назад к заданиям</a>
+
+{% endblock %}

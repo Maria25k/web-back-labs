@@ -1,76 +1,36 @@
 {% extends "base.html" %}
-
 {% block lab %}Регистрация{% endblock %}
-
 {% block main %}
-    <h1>Регистрация нового пользователя</h1>
-    
-    {% if error %}
-        <div style="color: red; font-weight: bold; padding: 10px; border: 1px solid red; margin-bottom: 15px;">
-            {{ error | safe }}
-        </div>
-    {% endif %}
-    
-    <form method="post">
-        <div style="margin-bottom: 10px;">
-            <label for="login">Логин:</label><br>
-            <input type="text" id="login" name="login" value="{{ login or '' }}" style="width: 250px; padding: 5px;">
-        </div>
-        
-        <div style="margin-bottom: 10px;">
-            <label for="password">Пароль:</label><br>
-            <input type="password" id="password" name="password" style="width: 250px; padding: 5px;">
-        </div>
-        
-        <div style="margin-bottom: 10px;">
-            <label for="confirm_password">Подтверждение пароля:</label><br>
-            <input type="password" id="confirm_password" name="confirm_password" style="width: 250px; padding: 5px;">
-        </div>
-        
-        <div style="margin-bottom: 10px;">
-            <label for="name">Имя и фамилия:</label><br>
-            <input type="text" id="name" name="name" value="{{ name or '' }}" style="width: 250px; padding: 5px;">
-        </div>
-        
-        <div style="margin-bottom: 15px;">
-            <label>Пол:</label><br>
-            <label>
-                <input type="radio" name="gender" value="М" {% if gender == 'М' %}checked{% endif %}>
-                Мужской
-            </label>
-            <label style="margin-left: 20px;">
-                <input type="radio" name="gender" value="Ж" {% if gender == 'Ж' %}checked{% endif %}>
-                Женский
-            </label>
-        </div>
-        
-        <div>
-            <button type="submit" style="
-                background-color: #ffb6c1; 
-                color: #333; 
-                border: 1px solid #ff69b4;
-                padding: 8px 20px;
-                border-radius: 5px;
-                cursor: pointer;
-                font-weight: bold;
-                margin-right: 10px;">
-                Зарегистрироваться
-            </button>
-            
-            <button type="reset" style="
-                background-color: #ffd1dc; 
-                color: #333; 
-                border: 1px solid #ff69b4;
-                padding: 8px 20px;
-                border-radius: 5px;
-                cursor: pointer;">
-                Очистить
-            </button>
-        </div>
-    </form>
-    
-    <div style="margin-top: 30px;">
-        <a href="/lab4/login">← Уже есть аккаунт? Войти</a><br>
-        <a href="/lab4/">← Назад к списку лабораторных</a>
+
+<h1>Регистрация нового пользователя</h1>
+
+<form method="post">
+    <div>
+        <label for="login">Логин:</label>
+        <input type="text" id="login" name="login" value="{{ entered_login }}">
     </div>
+    <div>
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" value="{{ entered_name }}">
+    </div>
+    <div>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password">
+    </div>
+    <div>
+        <label for="password2">Подтверждение пароля:</label>
+        <input type="password" id="password2" name="password2">
+    </div>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <div>
+        <button type="submit">Зарегистрироваться</button>
+    </div>
+</form>
+
+<a href="/lab4/login">Вход</a>
+
 {% endblock %}
