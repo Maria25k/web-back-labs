@@ -222,3 +222,57 @@ def fridge():
                           error=error, 
                           snowflakes=snowflakes,
                           message=message)
+
+@lab4.route('/lab4/grain', methods=['GET', 'POST'])
+def grain():
+    grains = {
+        'ячмень': 12000,
+        'овёс': 8500,
+        'пшеница': 9000,
+        'рожь': 15000
+    }
+    
+    if request.method == 'GET':
+        return render_template('lab4/grain.html', grains=list(grains.keys()))
+    
+    grain_type = request.form.get('grain')
+    weight_str = request.form.get('weight', '').strip()
+    
+    errors = []
+    
+    if not grain_type:
+        errors.append('Не выбран тип зерна')
+    
+    if not weight_str:
+        errors.append('Не указан вес')
+    else:
+        try:
+            weight = float(weight_str)
+            if weight <= 0:
+                errors.append('Вес должен быть положительным числом')
+            elif weight > 100:
+                errors.append('Такого объёма сейчас нет в наличии')
+        except ValueError:
+            errors.append('Вес должен быть числом')
+    
+    if errors:
+        return render_template('lab4/grain.html', 
+                              grains=list(grains.keys()),
+                              errors=errors)
+    
+    weight = float(weight_str)
+    price_per_ton = grains[grain_type]
+    total = weight * price_per_ton
+    
+    discount = 0
+    if weight > 10:
+        discount = total * 0.10
+        total -= discount
+    
+    return render_template('lab4/grain_result.html',
+                          grain=grain_type,
+                          weight=weight,
+                          price_per_ton=price_per_ton,
+                          total=total,
+                          discount=discount,
+                          has_discount=discount > 0)
