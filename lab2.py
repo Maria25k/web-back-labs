@@ -22,7 +22,7 @@ def example():
                            course=course, fruits=fruits)
 
 @lab2.route('/lab2/')
-def lab():
+def lab22():
     return render_template('lab2.html')
 
 @lab2.route('/lab2/filters')

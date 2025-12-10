@@ -1,20 +1,16 @@
 from flask import Blueprint, render_template, request, make_response, redirect
-
 lab3 = Blueprint('lab3', __name__)
 
 @lab3.route('/lab3/')
-def lab33():
+def lab():
     name = request.cookies.get('name')
     age = request.cookies.get('age')
     name_color = request.cookies.get('name_color')
-
-    if not name:
-        name = 'Аноним'
-    if not age:
-        age = 'неизвестен'
-
-    return render_template('lab3/lab3.html', name=name, age=age, name_color=name_color)
-
+    
+    return render_template('lab3/lab3.html', 
+                         name=name, 
+                         age=age, 
+                         name_color=name_color)
 
 @lab3.route('/lab3/cookie')
 def cookie():
@@ -36,14 +32,18 @@ def del_cookie():
 def form1():
     errors = {}
     user = request.args.get('user')
-    if user == '':
-        errors['user'] = 'Заполните поле!'
     age = request.args.get('age')
-    if age == '':
-        errors['age'] = 'Заполните поле!'
     sex = request.args.get('sex')
-    if sex == '':
+    
+    if user is not None and user.strip() == '':
+        errors['user'] = 'Заполните поле!'
+    
+    if age is not None and age.strip() == '':
+        errors['age'] = 'Заполните поле!'
+    
+    if sex is not None and sex.strip() == '':
         errors['sex'] = 'Заполните поле!'
+    
     return render_template('lab3/form1.html', user=user, age=age, sex=sex, errors=errors)
 
 @lab3.route('/lab3/order')
@@ -79,7 +79,6 @@ def success():
 
 @lab3.route('/lab3/settings')
 def settings():
-    
     color = request.args.get('color')
     bg_color = request.args.get('bg_color')
     font_size = request.args.get('font_size')
@@ -97,8 +96,10 @@ def settings():
         if bold:
             resp.set_cookie('bold', bold)
         else:
-            resp.delete_cookie('bold')  
+            resp.delete_cookie('bold')
+            
         return resp
+    
     color = request.cookies.get('color')
     bg_color = request.cookies.get('bg_color')
     font_size = request.cookies.get('font_size')
@@ -123,7 +124,6 @@ def settings_reset():
 def ticket():
     errors = {}
     
-    # Получаем данные из формы
     fio = request.args.get('fio')
     shelf = request.args.get('shelf')
     linen = request.args.get('linen')
@@ -134,7 +134,6 @@ def ticket():
     date = request.args.get('date')
     insurance = request.args.get('insurance')
     
-    # Валидация
     if fio is not None:
         if fio.strip() == '':
             errors['fio'] = 'Заполните ФИО'
@@ -159,20 +158,16 @@ def ticket():
     if date is not None and date.strip() == '':
         errors['date'] = 'Выберите дату'
     
-    # Расчет стоимости
     price = 0
     if not errors and fio:
-        # Базовая стоимость
         if age and int(age) < 18:
-            price = 700  # Детский
+            price = 700
         else:
-            price = 1000  # Взрослый
+            price = 1000
         
-        # Доплата за полку
         if shelf in ['lower', 'lower-side']:
             price += 100
         
-        # Доплаты
         if linen == 'on':
             price += 75
         if luggage == 'on':
@@ -180,19 +175,16 @@ def ticket():
         if insurance == 'on':
             price += 150
     
-    # Если есть ошибки или форма не отправлена
     if errors or not request.args:
         return render_template('lab3/ticket.html',
                              fio=fio, shelf=shelf, linen=linen, luggage=luggage,
                              age=age, departure=departure, destination=destination,
                              date=date, insurance=insurance, errors=errors)
     
-    # Если все OK - показываем билет
     return render_template('lab3/ticket.html',
                          fio=fio, shelf=shelf, linen=linen, luggage=luggage,
                          age=age, departure=departure, destination=destination,
                          date=date, insurance=insurance, price=price)
-
 
 products = [
     {'name': 'iPhone 15', 'price': 89990, 'brand': 'Apple', 'color': 'черный'},
@@ -226,7 +218,7 @@ products = [
 def products_search():
     min_price = request.args.get('min_price')
     max_price = request.args.get('max_price')
-    action = request.args.get('action')  
+    action = request.args.get('action')
     
     if action == 'reset':
         resp = make_response(redirect('/lab3/products'))
