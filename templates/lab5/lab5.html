@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Лабораторная работа 5</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .menu {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .menu a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .menu a:hover {
+            text-decoration: underline;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .user {
+            float: right;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <strong>WEB-программирование, часть 2. Лабораторная работа 5</strong>
+    </div>
+
+    <div class="header">
+        <h1>База знаний</h1>
+    </div>
+
+    <div class="menu">
+        <a href="/lab5/list">Список статей</a>
+        <a href="/lab5/create">Создать статью</a>
+        <a href="/lab5/login">Войти</a>
+        <a href="/lab5/register">Регистрация</a>
+        <span class="user">Пользователь: {{ login }}</span>
+    </div>
+</body>
+</html>
