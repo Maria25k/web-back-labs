@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block lab %}Холодильник{% endblock %}
+
+{% block main %}
+    <h1>Холодильник</h1>
+    
+    <form method="post">
+        <div>
+            <label for="temperature">Установите температуру (°C):</label><br>
+            <input type="number" id="temperature" name="temperature" 
+                   value="{% if temperature %}{{ temperature }}{% endif %}" 
+                   placeholder="от -12 до -1" style="padding: 5px; width: 200px;">
+        </div>
+        <div style="margin-top: 10px;">
+            <button type="submit" style="
+                background-color: #ffb6c1; 
+                color: #333; 
+                border: 1px solid #ff69b4;
+                padding: 8px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+                margin-right: 10px;">
+                Установить
+            </button>
+            
+            <button type="reset" style="
+                background-color: #ffd1dc; 
+                color: #333; 
+                border: 1px solid #ff69b4;
+                padding: 8px 20px;
+                border-radius: 5px;
+                cursor: pointer;">
+                Сбросить
+            </button>
+        </div>
+    </form>
+    
+    {% if error %}
+        <div style="color: red; font-weight: bold; margin-top: 20px; padding: 10px; border: 1px solid red;">
+            {{ error }}
+        </div>
+    {% elif message %}
+        <div style="margin-top: 20px; padding: 15px; background-color: #f0f8ff; border-radius: 5px;">
+            <h3 style="color: #333;">{{ message }}</h3>
+            <div style="font-size: 24px; color: blue; margin: 10px 0;">
+                {% for i in range(snowflakes) %}
+                    ❄️
+                {% endfor %}
+            </div>
+            <p style="color: #555;">
+                {% if snowflakes == 3 %}
+                    (Очень холодно)
+                {% elif snowflakes == 2 %}
+                    (Холодно)
+                {% elif snowflakes == 1 %}
+                    (Прохладно)
+                {% endif %}
+            </p>
+        </div>
+    {% endif %}
+    
+    <div style="margin-top: 30px;">
+        <a href="/lab4/">← Назад к списку</a>
+    </div>
+{% endblock %}

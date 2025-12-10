@@ -134,7 +134,6 @@ def tree():
 @lab4.route('/lab4/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        # Проверяем по ключу 'user_name' (или можно использовать 'login')
         authorized = 'user_name' in session
         user_name = session.get('user_name', '')
         login_value = session.get('login', '')
@@ -144,11 +143,9 @@ def login():
                                login_value=login_value,
                                error='')
 
-    # POST-запрос
     login_input = request.form.get('login', '').strip()
     password = request.form.get('password', '').strip()
 
-    # Валидация
     if not login_input:
         return render_template('lab4/login.html', 
                                authorized=False, 
@@ -163,7 +160,6 @@ def login():
                                login_value=login_input,
                                error='Не введён пароль')
 
-    # Поиск пользователя
     user_found = None
     for user in users:
         if user['login'] == login_input and user['password'] == password:
@@ -171,10 +167,9 @@ def login():
             break
 
     if user_found:
-        # Сохраняем и логин, и имя в сессии
         session['login'] = login_input
         session['user_name'] = user_found['name']
-        return redirect('/lab4/login')  # POST/Redirect/GET
+        return redirect('/lab4/login')  
 
     return render_template('lab4/login.html', 
                            authorized=False, 
@@ -185,7 +180,45 @@ def login():
 
 @lab4.route('/lab4/logout', methods=['POST'])
 def logout():
-    # Удаляем все связанные с авторизацией ключи
     session.pop('login', None)
     session.pop('user_name', None)
     return redirect('/lab4/login')
+
+@lab4.route('/lab4/fridge', methods=['GET', 'POST'])
+def fridge():
+    temperature = None
+    error = None
+    snowflakes = 0
+    message = ''
+    
+    if request.method == 'POST':
+        temp_str = request.form.get('temperature', '').strip()
+        
+        if not temp_str:
+            error = 'Ошибка: не задана температура'
+        else:
+            try:
+                temperature = int(temp_str)
+                
+                if temperature < -12:
+                    error = 'Не удалось установить температуру — слишком низкое значение'
+                elif temperature > -1:
+                    error = 'Не удалось установить температуру — слишком высокое значение'
+                elif -12 <= temperature <= -9:
+                    snowflakes = 3
+                    message = f'Установлена температура: {temperature}°C'
+                elif -8 <= temperature <= -5:
+                    snowflakes = 2
+                    message = f'Установлена температура: {temperature}°C'
+                elif -4 <= temperature <= -1:
+                    snowflakes = 1
+                    message = f'Установлена температура: {temperature}°C'
+                    
+            except ValueError:
+                error = 'Температура должна быть числом'
+    
+    return render_template('lab4/fridge.html', 
+                          temperature=temperature, 
+                          error=error, 
+                          snowflakes=snowflakes,
+                          message=message)
