@@ -30,7 +30,6 @@ def div():
     result = x1 / x2
     return render_template('lab4/div.html', x1=x1, x2=x2, result=result)
 
-# Суммирование
 @lab4.route('/lab4/sum-form')
 def sum_form():
     return render_template('lab4/sum-form.html')
@@ -46,7 +45,6 @@ def sum():
     result = x1 + x2
     return render_template('lab4/sum.html', x1=x1, x2=x2, result=result)
 
-# Умножение
 @lab4.route('/lab4/mul-form')
 def mul_form():
     return render_template('lab4/mul-form.html')
@@ -124,3 +122,47 @@ def tree():
             tree_count -= 1
     
     return redirect('/lab4/tree') 
+
+users = [
+    {'login': 'alex', 'password': '123'},
+    {'login': 'bob', 'password': '555'}
+]
+
+@lab4.route('/lab4/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        if 'login' in session:
+            authorized = True
+            login_user = session['login']
+        else:
+            authorized = False
+            login_user = ''
+        
+        return render_template('lab4/login.html', 
+                               authorized=authorized, 
+                               login=login_user,
+                               error='')
+    
+    login_user = request.form.get('login')
+    password = request.form.get('password')
+    
+    if not login_user or not password:
+        return render_template('lab4/login.html', 
+                               authorized=False, 
+                               login=login_user,
+                               error='Не введены логин или пароль')
+    
+    for user in users:
+        if user['login'] == login_user and user['password'] == password:
+            session['login'] = login_user
+            return redirect('/lab4/login')  
+    
+    return render_template('lab4/login.html', 
+                           authorized=False, 
+                           login=login_user,
+                           error='Неверные логин и/или пароль')
+
+@lab4.route('/lab4/logout', methods=['POST'])
+def logout():
+    session.pop('login', None)
+    return redirect('/lab4/login')
