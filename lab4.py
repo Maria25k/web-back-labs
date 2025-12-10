@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request
-
+from flask import Blueprint, render_template, request, redirect, session
 lab4 = Blueprint('lab4', __name__)
+tree_count = 0
 
 @lab4.route('/lab4/')
 def lab():
@@ -106,3 +106,21 @@ def power():
     
     result = x1 ** x2
     return render_template('lab4/pow.html', x1=x1, x2=x2, result=result)
+
+@lab4.route('/lab4/tree', methods=['GET', 'POST'])
+def tree():
+    global tree_count
+    
+    if request.method == 'GET':
+        return render_template('lab4/tree.html', tree_count=tree_count)
+    
+    operation = request.form.get('operation')
+    
+    if operation == 'plant':
+        if tree_count < 10:  
+            tree_count += 1
+    elif operation == 'cut':
+        if tree_count > 0:   
+            tree_count -= 1
+    
+    return redirect('/lab4/tree') 
