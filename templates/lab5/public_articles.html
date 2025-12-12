@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
+    <h1>Публичные статьи</h1>
+    
+    {% if articles %}
+        {% for article in articles %}
+            <div style="border: 1px solid #ddd; padding: 20px; margin: 15px 0; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h3 style="color: #333; margin-top: 0;">{{ article.title }}</h3>
+                <p style="color: #666; line-height: 1.6; white-space: pre-line;">{{ article.article_text }}</p>
+                <small style="color: #888;">
+                    Автор: {{ article.login }} 
+                    {% if article.real_name %}
+                        ({{ article.real_name }})
+                    {% endif %}
+                    {% if article.is_favorite %}
+                        | ⭐ Избранная статья
+                    {% endif %}
+                </small>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align: center; padding: 40px; color: #666;">
+            <p>Публичных статей пока нет</p>
+            <p><a href="/lab5/create">Создайте первую статью</a> и сделайте её публичной!</p>
+        </div>
+    {% endif %}
+    
+    <p style="margin-top: 30px;">
+        <a href="/lab5/" style="color: #007bff; text-decoration: none;">← На главную</a>
+    </p>
+{% endblock %}

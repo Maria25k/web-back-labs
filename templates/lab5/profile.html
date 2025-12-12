@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
+    <h1>Настройки профиля</h1>
+    
+    {% if errors %}
+        {% for error in errors %}
+            <p style="color: red;">{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+    
+    <form method="post">
+        <div>
+            <label>
+                Реальное имя:
+                <input type="text" name="real_name" value="{{ current_name }}">
+            </label>
+        </div>
+
+        <h3>Смена пароля</h3>
+        <p>Заполните только если хотите сменить пароль</p>
+        
+        <div>
+            <label>
+                Текущий пароль:
+                <input type="password" name="current_password">
+            </label>
+        </div>
+
+        <div>
+            <label>
+                Новый пароль:
+                <input type="password" name="new_password">
+            </label>
+        </div>
+
+        <div>
+            <label>
+                Подтверждение пароля:
+                <input type="password" name="confirm_password">
+            </label>
+        </div>
+
+        <div>
+            <button type="submit">Сохранить изменения</button>
+            <a href="/lab5/" style="margin-left: 10px;">Отмена</a>
+        </div>
+    </form>
+{% endblock %}

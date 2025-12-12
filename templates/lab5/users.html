@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
+    <h1>Все пользователи</h1>
+    
+    {% if users %}
+        {% for user in users %}
+            <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                <strong>Логин: {{ user['login'] }}</strong>
+                {% if user['real_name'] %}
+                    <br>Имя: {{ user['real_name'] }}
+                {% else %}
+                    <br>Имя: не указано
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Нет зарегистрированных пользователей</p>
+    {% endif %}
+    
+    <p><a href="/lab5/">На главную</a></p>
+{% endblock %}

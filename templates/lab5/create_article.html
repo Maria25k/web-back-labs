@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    input[type="text"], textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+    
+    textarea {
+        height: 200px;
+        resize: vertical;
+        font-family: Arial, sans-serif;
+    }
+    
+    .btn-submit {
+        background: #ff0077;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    .btn-submit:hover {
+        background: #e6006c;
+    }
+    
+    .error-message {
+        color: #dc3545;
+        background: #f8d7da;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        border: 1px solid #f5c6cb;
+    }
+    
+    .back-link {
+        display: inline-block;
+        margin-top: 15px;
+        color: #007bff;
+        text-decoration: none;
+    }
+</style>
+
+<div class="form-container">
+    <h1>Создание статьи</h1>
+    
+    {% if error %}
+        <div class="error-message">{{ error }}</div>
+    {% endif %}
+    
+    <form method="post">
+        <div class="form-group">
+            <label for="title">Название статьи:</label>
+            <input type="text" id="title" name="title" value="{{ title if title }}" maxlength="50" required>
+        </div>
+
+        <div class="form-group">
+            <label for="article_text">Текст статьи:</label>
+            <textarea id="article_text" name="article_text" placeholder="Введите текст статьи..." required>{{ article_text if article_text }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn-submit">Создать статью</button>
+        </div>
+    </form>
+    
+    <a href="/lab5/list" class="back-link">← Назад к списку статей</a>
+</div>
+{% endblock %}
