@@ -1,8 +1,8 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Лабораторная работа 5</title>
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,12 +30,11 @@
         }
         .user {
             float: right;
-            color: #333;
+            color: #fff;
             font-weight: bold;
         }
     </style>
-</head>
-<body>
+
     <div class="menu">
         <strong>WEB-программирование, часть 2. Лабораторная работа 5</strong>
     </div>
@@ -49,7 +48,11 @@
         <a href="/lab5/create">Создать статью</a>
         <a href="/lab5/login">Войти</a>
         <a href="/lab5/register">Регистрация</a>
-        <span class="user">Пользователь: {{ login }}</span>
+        <span class="user">
+            Пользователь: {{ login if login else 'anonymous' }}
+            {% if login %}
+                | <a href="/lab5/logout">Выйти</a>
+            {% endif %}
+        </span>
     </div>
-</body>
-</html>
+{% endblock %}
