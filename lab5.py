@@ -4,13 +4,8 @@ from psycopg2.extras import RealDictCursor
 
 lab5 = Blueprint('lab5', __name__)
 
-@lab5.route('/lab5')
-@lab5.route('/lab5/')
-def main():
-    login = session.get('login')
-    return render_template('lab5/lab5.html', login=login)
-
 def db_connect():
+    """Подключение к базе данных"""
     conn = psycopg2.connect(
         host='127.0.0.1',
         database='maria_yusupova_knowledge_base',
@@ -21,9 +16,17 @@ def db_connect():
     return conn, cur
 
 def db_close(conn, cur):
+    """Закрытие соединения с БД"""
     conn.commit()
     cur.close()
     conn.close()
+
+# Главная страница
+@lab5.route('/lab5')
+@lab5.route('/lab5/')
+def main():
+    login = session.get('login')
+    return render_template('lab5/lab5.html', login=login)
 
 @lab5.route('/lab5/register', methods=['GET', 'POST'])
 def register():
