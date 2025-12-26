@@ -4,47 +4,156 @@
 
 {% block main %}
     <style>
-        .article {
-            border: 1px solid #ddd;
-            padding: 15px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .header {
+            text-align: center;
             margin-bottom: 20px;
-            background-color: #f9f9f9;
+            color: #333;
+        }
+        .menu {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .menu a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .menu a:hover {
+            text-decoration: underline;
+        }
+        .user {
+            float: right;
+            color: #fff;
+            font-weight: bold;
+        }
+        .article {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .article h2 {
             margin-top: 0;
-            color: #333;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
         }
-        .article .meta {
-            color: #666;
+        .meta {
+            color: #7f8c8d;
             font-size: 0.9em;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .text {
+            line-height: 1.6;
+            color: #333;
+            white-space: pre-line;
         }
         .no-articles {
+            text-align: center;
             font-style: italic;
             color: #888;
+            padding: 40px;
+            background: white;
+            border-radius: 5px;
+        }
+        .actions {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .actions a {
+            text-decoration: none;
+            margin-right: 15px;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+        .actions a:hover {
+            background: #f0f0f0;
+        }
+        .delete-link {
+            color: #e74c3c;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .back-link:hover {
+            background: #555;
         }
     </style>
 
-    <h1>Мои статьи</h1>
+    <!-- Меню лабораторной работы 5 -->
+    <div class="menu">
+        <strong>WEB-программирование, часть 2. Лабораторная работа 5</strong>
+    </div>
+
+    <div class="menu">
+        <a href="/lab5/list">Список статей</a>
+        <a href="/lab5/create">Создать статью</a>
+        <a href="/lab5/public">Публичные статьи</a>
+        <a href="/lab5/users">Все пользователи</a>
+        <a href="/lab5/profile">Профиль</a>
+        <a href="/lab5/register">Регистрация</a>
+        <span class="user">
+            Пользователь: {{ login if login else 'anonymous' }}
+            {% if login %}
+                | <a href="/lab5/logout" style="color: #ffcc00;">Выйти</a>
+            {% else %}
+                | <a href="/lab5/login" style="color: #ffcc00;">Войти</a>
+            {% endif %}
+        </span>
+    </div>
+
+    <div class="header">
+        <h1>📝 Мои статьи</h1>
+    </div>
 
     {% if articles %}
         {% for article in articles %}
             <div class="article">
                 <h2>{{ article['title'] }}</h2>
                 <div class="meta">
-                    ID: {{ article['id'] }} | 
-                    Публичная: {{ 'Да' if article['is_public'] else 'Нет' }} | 
-                    Избранная: {{ 'Да' if article['is_favorite'] else 'Нет' }} | 
-                    Лайков: {{ article['likes'] }}
+                    📅 ID: {{ article['id'] }} | 
+                    🌍 Публичная: {{ 'Да' if article['is_public'] else 'Нет' }} | 
+                    ⭐ Избранная: {{ 'Да' if article['is_favorite'] else 'Нет' }} | 
+                    ❤️ Лайков: {{ article['likes'] }}
                 </div>
                 <div class="text">
-                    {{ article['article_text'] | replace('\r\n', '<br>') | safe }}
+                    {{ article['article_text'] }}
+                </div>
+                <div class="actions">
+                    <a href="/lab5/edit/{{ article['id'] }}">✏️ Редактировать</a>
+                    <a href="/lab5/delete/{{ article['id'] }}" 
+                       onclick="return confirm('Удалить статью?')" 
+                       class="delete-link">🗑️ Удалить</a>
                 </div>
             </div>
         {% endfor %}
     {% else %}
-        <p class="no-articles">У вас пока нет статей. <a href="/lab5/create">Создайте первую!</a></p>
+        <div class="no-articles">
+            <h3>📭 Статей пока нет</h3>
+            <p>У вас ещё нет созданных статей.</p>
+            <a href="/lab5/create" class="back-link">Создать первую статью</a>
+        </div>
     {% endif %}
 
-    <p><a href="/lab5">Вернуться на главную</a></p>
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/lab5" class="back-link">← Вернуться на главную базы знаний</a>
+    </div>
 {% endblock %}

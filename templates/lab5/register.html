@@ -11,6 +11,9 @@
         <div>
             <label>Пароль: <input type="password" name="password"></label>
         </div>
+        <div>
+            <label>Реальное имя (необязательно): <input type="text" name="real_name"></label>
+        </div>
         <button type="submit">Зарегистрироваться</button>
         {% if error %}
             <div style="color: red; margin-top: 10px;">{{ error }}</div>
