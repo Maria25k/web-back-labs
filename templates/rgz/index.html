@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>РГЗ - Предложение услуг</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .student-info {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        .menu a {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+        .menu a:hover {
+            background: #2980b9;
+        }
+        .logout-btn {
+            background: #e74c3c;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        .search-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 30px 0;
+        }
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            flex: 1;
+            min-width: 200px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .search-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .search-btn:hover {
+            background: #219653;
+        }
+        .users-list {
+            margin-top: 30px;
+        }
+        .user-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background: white;
+            transition: transform 0.3s;
+        }
+        .user-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .user-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+        }
+        .search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .clear-btn {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .clear-btn:hover {
+            background: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="student-info">
+            <strong>{{ student_name }}</strong> | {{ student_group }} | РГЗ: "Предложение услуг"
+        </div>
+        
+        <h1>Система "Предложение услуг"</h1>
+        
+        <div class="menu">
+            {% if session.user_id %}
+                <a href="{{ url_for('rgz.profile') }}">Мой профиль</a>
+                <a href="{{ url_for('rgz.logout') }}" class="logout-btn">Выйти</a>
+                {% if session.role == 'admin' %}
+                    <a href="{{ url_for('rgz.admin') }}" style="background: #e74c3c;">Админ-панель</a>
+                {% endif %}
+            {% else %}
+                <a href="{{ url_for('rgz.login') }}">ВОЙТИ</a>
+                <a href="{{ url_for('rgz.register') }}">РЕГИСТРАЦИЯ</a>
+            {% endif %}
+            <a href="{{ url_for('index') }}">На главную сайта</a>
+        </div>
+        
+        <div class="search-form">
+            <div class="search-header">
+                <h2 style="margin: 0;">Поиск специалистов</h2>
+                <button class="clear-btn" onclick="clearSearch()">Очистить поиск</button>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="searchName">Имя специалиста:</label>
+                    <input type="text" id="searchName" placeholder="Введите имя">
+                </div>
+                <div class="form-group">
+                    <label for="searchService">Вид услуги:</label>
+                    <select id="searchService">
+                        <option value="">Все услуги</option>
+                        {% for service in service_types %}
+                            <option value="{{ service }}">{{ service }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="searchExpMin">Стаж от (лет):</label>
+                    <input type="number" id="searchExpMin" placeholder="0" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="searchExpMax">Стаж до (лет):</label>
+                    <input type="number" id="searchExpMax" placeholder="50" min="0">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="searchPriceMin">Цена от (руб.):</label>
+                    <input type="number" id="searchPriceMin" placeholder="0" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="searchPriceMax">Цена до (руб.):</label>
+                    <input type="number" id="searchPriceMax" placeholder="10000" min="0">
+                </div>
+            </div>
+            
+            <button class="search-btn" onclick="search()">Найти специалистов</button>
+        </div>
+        
+        <div class="users-list">
+            <h2>Результаты поиска:</h2>
+            <div id="usersContainer">
+                {% for user in users %}
+                <div class="user-card">
+                    <h3>{{ user.name }}</h3>
+                    <p><strong>Услуга:</strong> {{ user.service_type }}</p>
+                    <p><strong>Стаж:</strong> {{ user.experience }} лет</p>
+                    <p><strong>Цена:</strong> {{ user.price }} руб.</p>
+                    {% if user.about %}
+                    <p><strong>О себе:</strong> {{ user.about }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; color: #666;">
+            <p><strong>Для тестирования:</strong></p>
+            <p>Администратор: логин <code>admin</code>, пароль <code>admin123</code></p>
+            <p>Пользователь: логин <code>user1</code>, пароль <code>password1</code></p>
+        </div>
+    </div>
+    
+    <script>
+        function search() {
+            const name = document.getElementById('searchName').value;
+            const service = document.getElementById('searchService').value;
+            const expMin = document.getElementById('searchExpMin').value || 0;
+            const expMax = document.getElementById('searchExpMax').value || 50;
+            const priceMin = document.getElementById('searchPriceMin').value || 0;
+            const priceMax = document.getElementById('searchPriceMax').value || 10000;
+            
+            const container = document.getElementById('usersContainer');
+            container.innerHTML = '<div class="no-results">Идет поиск...</div>';
+            
+            fetch(`{{ url_for('rgz.search') }}?name=${encodeURIComponent(name)}&service=${encodeURIComponent(service)}&exp_min=${expMin}&exp_max=${expMax}&price_min=${priceMin}&price_max=${priceMax}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка сети');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    container.innerHTML = '';
+                    
+                    if (data.length === 0) {
+                        container.innerHTML = '<div class="no-results">Специалисты не найдены. Попробуйте изменить параметры поиска.</div>';
+                        return;
+                    }
+                    
+                    data.forEach(user => {
+                        const aboutHTML = user.about ? `<p><strong>О себе:</strong> ${user.about}</p>` : '';
+                        container.innerHTML += `
+                            <div class="user-card">
+                                <h3>${user.name}</h3>
+                                <p><strong>Услуга:</strong> ${user.service_type}</p>
+                                <p><strong>Стаж:</strong> ${user.experience} лет</p>
+                                <p><strong>Цена:</strong> ${user.price} руб.</p>
+                                ${aboutHTML}
+                            </div>
+                        `;
+                    });
+                })
+                .catch(error => {
+                    console.error('Ошибка поиска:', error);
+                    container.innerHTML = '<div class="no-results" style="color: red;">Ошибка при поиске. Проверьте подключение к интернету.</div>';
+                });
+        }
+        
+        function clearSearch() {
+            document.getElementById('searchName').value = '';
+            document.getElementById('searchService').value = '';
+            document.getElementById('searchExpMin').value = '';
+            document.getElementById('searchExpMax').value = '';
+            document.getElementById('searchPriceMin').value = '';
+            document.getElementById('searchPriceMax').value = '';
+            
+            search();
+        }
+        
+         document.addEventListener('DOMContentLoaded', function() {
+            search();
+        });
+    </script>
+</body>
+</html>

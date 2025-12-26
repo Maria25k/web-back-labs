@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Регистрация - РГЗ</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .student-info {
+            background: #f8f9fa;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #219653;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #ffe6e6;
+            border-radius: 5px;
+        }
+        .links {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .links a {
+            color: #3498db;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="student-info">
+            {{ student_name }} | {{ student_group }}
+        </div>
+        
+        <h1>Регистрация</h1>
+        
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">Логин:</label>
+                <input type="text" id="username" name="username" placeholder="Только латинские буквы и цифры" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" placeholder="Придумайте пароль" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="name">Ваше имя:</label>
+                <input type="text" id="name" name="name" placeholder="Ваше настоящее имя" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="service_type">Вид услуги:</label>
+                <select id="service_type" name="service_type" required>
+                    <option value="">Выберите услугу</option>
+                    {% for service in service_types %}
+                        <option value="{{ service }}">{{ service }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="experience">Стаж (лет):</label>
+                <input type="number" id="experience" name="experience" placeholder="0" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="price">Цена (руб.):</label>
+                <input type="number" id="price" name="price" placeholder="1000" min="1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="about">О себе (необязательно):</label>
+                <textarea id="about" name="about" placeholder="Расскажите о себе..."></textarea>
+            </div>
+            
+            <button type="submit">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+        </form>
+        
+        <div class="links">
+            <p>Уже есть аккаунт? <a href="{{ url_for('rgz.login') }}">Войти</a></p>
+            <p><a href="{{ url_for('rgz.index') }}">На главную РГЗ</a></p>
+        </div>
+    </div>
+</body>
+</html>

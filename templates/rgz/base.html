@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Предложение услуг - РГЗ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+        
+        .student-info {
+            background: #f8f9fa;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #3498db;
+            font-size: 0.95em;
+            color: #555;
+        }
+        
+        nav {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        nav a {
+            display: inline-block;
+            margin-right: 15px;
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        nav a.active {
+            background: #2c3e50;
+        }
+        
+        main {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            min-height: 500px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .error {
+            background: #ffe6e6;
+            color: #c0392b;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #c0392b;
+        }
+        
+        .success {
+            background: #e6ffe6;
+            color: #27ae60;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #27ae60;
+        }
+        
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        button,
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        button:hover,
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .user-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            transition: transform 0.3s ease;
+        }
+        
+        .user-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .user-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        tr:hover {
+            background: #f5f7fa;
+        }
+        
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .search-form input,
+        .search-form button {
+            padding: 12px;
+        }
+        
+        .search-form button {
+            grid-column: 1 / -1;
+            background: #2ecc71;
+        }
+        
+        .search-form button:hover {
+            background: #27ae60;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header, main, footer {
+                padding: 15px;
+            }
+            
+            nav a {
+                display: block;
+                margin: 5px 0;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Предложение услуг - РГЗ</h1>
+            <div class="student-info">
+                {{ student_name }} | Группа: {{ student_group }}
+            </div>
+            <nav>
+                <a href="/rgz/" {% if request.endpoint == 'rgz.index' %}class="active"{% endif %}>Главная</a>
+                {% if session.user_id %}
+                    <a href="/rgz/profile" {% if request.endpoint == 'rgz.profile' %}class="active"{% endif %}>Профиль</a>
+                    {% if session.role == 'admin' %}
+                        <a href="/rgz/admin" {% if request.endpoint == 'rgz.admin' %}class="active"{% endif %}>Админ-панель</a>
+                    {% endif %}
+                    <a href="/rgz/logout">Выйти</a>
+                {% else %}
+                    <a href="/rgz/login" {% if request.endpoint == 'rgz.login' %}class="active"{% endif %}>Войти</a>
+                    <a href="/rgz/register" {% if request.endpoint == 'rgz.register' %}class="active"{% endif %}>Регистрация</a>
+                {% endif %}
+                <a href="/">Назад к лабораторным</a>
+            </nav>
+        </header>
+        
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+        
+        <footer>
+            <p>© 2025 Система "Предложение услуг". {{ student_name }}, {{ student_group }}</p>
+            <p>Вариант 36: Пользователи могут предлагать услуги, другие пользователи могут их искать.</p>
+        </footer>
+    </div>
+</body>
+</html>

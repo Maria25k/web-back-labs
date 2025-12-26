@@ -1,0 +1,40 @@
+{% extends "rgz/base.html" %}
+
+{% block content %}
+<h2>Настройка пароля администратора</h2>
+
+<div class="success" style="margin-bottom: 20px;">
+    <p>Впервые в системе? Настройте пароль для учетной записи администратора.</p>
+    <p><strong>Логин администратора:</strong> admin</p>
+</div>
+
+{% if error %}
+<div class="error">
+    {{ error }}
+</div>
+{% endif %}
+
+<form method="POST">
+    <div class="form-group">
+        <label for="password">Новый пароль (минимум 6 символов):</label>
+        <input type="password" id="password" name="password" placeholder="Введите новый пароль" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="confirm_password">Подтвердите пароль:</label>
+        <input type="password" id="confirm_password" name="confirm_password" placeholder="Повторите пароль" required>
+    </div>
+    
+    <button type="submit" style="background: #e67e22;">Установить пароль</button>
+</form>
+
+<div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 6px;">
+    <h3>Важно!</h3>
+    <ol>
+        <li>Этот шаг нужно выполнить только один раз при первом запуске системы</li>
+        <li>Запомните установленный пароль - он потребуется для входа в админ-панель</li>
+        <li>После настройки пароля вы сможете войти как администратор</li>
+        <li>Как администратор вы сможете удалять пользователей и управлять системой</li>
+    </ol>
+</div>
+{% endblock %}

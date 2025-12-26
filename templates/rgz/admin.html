@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Админ-панель - РГЗ</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .student-info {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .menu {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .menu a {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .menu a:hover {
+            background: #2980b9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .btn {
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 12px;
+            margin: 2px;
+            display: inline-block;
+        }
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+        }
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+        .edit-btn {
+            background: #3498db;
+            color: white;
+        }
+        .edit-btn:hover {
+            background: #2980b9;
+        }
+        .admin-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .user-badge {
+            background: #3498db;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .hidden-badge {
+            background: #95a5a6;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .stats {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .stats h3 {
+            margin-top: 0;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="student-info">
+            <strong>{{ student_name }}</strong> | {{ student_group }} | Админ-панель
+            <br><small>Вы вошли как: {{ session.name }} ({{ session.role }})</small>
+        </div>
+        
+        <h1>Административная панель</h1>
+        
+        <div class="menu">
+            <a href="{{ url_for('rgz.index') }}">На главную РГЗ</a>
+            <a href="{{ url_for('index') }}">На главную сайта</a>
+            <a href="{{ url_for('rgz.profile') }}">Мой профиль</a>
+            <a href="{{ url_for('rgz.logout') }}" style="background: #e74c3c;">Выйти</a>
+        </div>
+        
+        <div class="stats">
+            <h3>Статистика системы</h3>
+            <p><strong>Всего пользователей:</strong> {{ users|length }}</p>
+            <p><strong>Администраторов:</strong> {{ users|selectattr('role', 'equalto', 'admin')|list|length }}</p>
+            <p><strong>Обычных пользователей:</strong> {{ users|selectattr('role', 'equalto', 'user')|list|length }}</p>
+            <p><strong>Скрытых анкет:</strong> {{ users|selectattr('is_hidden', 'equalto', 1)|list|length }}</p>
+        </div>
+        
+        <div class="warning">
+            <strong>Внимание!</strong> Удаление пользователей необратимо. Вы не можете удалить:
+            <ul>
+                <li>Свой собственный аккаунт через админ-панель</li>
+                <li>Других администраторов</li>
+            </ul>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Логин</th>
+                    <th>Имя</th>
+                    <th>Услуга</th>
+                    <th>Стаж</th>
+                    <th>Цена</th>
+                    <th>Роль</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.service_type }}</td>
+                    <td>{{ user.experience }} лет</td>
+                    <td>{{ user.price }} руб.</td>
+                    <td>
+                        {% if user.role == 'admin' %}
+                            <span class="admin-badge">Админ</span>
+                        {% else %}
+                            <span class="user-badge">Пользователь</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.is_hidden %}
+                            <span class="hidden-badge">Скрыта</span>
+                        {% else %}
+                            Активна
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.id != session.user_id %}
+                            <a href="{{ url_for('rgz.admin_delete', user_id=user.id) }}" 
+                               class="btn delete-btn" 
+                               onclick="return confirm('Вы уверены, что хотите удалить пользователя {{ user.name }} ({{ user.username }})? Это действие нельзя отменить.')">
+                                Удалить
+                            </a>
+                            {% if user.role != 'admin' %}
+                            <a href="{{ url_for('rgz.edit_user', user_id=user.id) }}" class="btn edit-btn">
+                                Редактировать
+                            </a>
+                            {% endif %}
+                        {% else %}
+                            <span style="color: #999; font-size: 12px;">Это вы</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

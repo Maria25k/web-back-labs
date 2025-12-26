@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Вход - РГЗ</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .student-info {
+            background: #f8f9fa;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #ffe6e6;
+            border-radius: 5px;
+        }
+        .links {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .links a {
+            color: #3498db;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .test-data {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .test-data code {
+            background: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="student-info">
+            {{ student_name }} | {{ student_group }}
+        </div>
+        
+        <h1>Вход в систему</h1>
+        
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">Логин:</label>
+                <input type="text" id="username" name="username" placeholder="Введите логин" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" placeholder="Введите пароль" required>
+            </div>
+            
+            <button type="submit">ВОЙТИ</button>
+        </form>
+        
+        <div class="test-data">
+            <h3>Тестовые данные:</h3>
+            <p><strong>Администратор:</strong> логин <code>admin</code>, пароль <code>admin123</code></p>
+            <p><strong>Пользователь:</strong> логин <code>user1</code>, пароль <code>password1</code></p>
+        </div>
+        
+        <div class="links">
+            <p>Нет аккаунта? <a href="{{ url_for('rgz.register') }}">Регистрация</a></p>
+            <p><a href="{{ url_for('rgz.index') }}">На главную РГЗ</a></p>
+        </div>
+    </div>
+</body>
+</html>

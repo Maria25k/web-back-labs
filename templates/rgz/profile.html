@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Мой профиль - РГЗ</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .student-info {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .menu a {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .menu a:hover {
+            background: #2980b9;
+        }
+        .logout-btn {
+            background: #e74c3c;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        .profile-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .profile-info p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .profile-info strong {
+            color: #2c3e50;
+        }
+        .edit-form {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .checkbox-group input {
+            width: auto;
+        }
+        .btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background: #219653;
+        }
+        .danger-btn {
+            background: #e74c3c;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .danger-btn:hover {
+            background: #c0392b;
+        }
+        .error {
+            color: red;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #ffe6e6;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="student-info">
+            <strong>{{ student_name }}</strong> | {{ student_group }}
+        </div>
+        
+        <h1>Мой профиль</h1>
+        
+        <div class="menu">
+            <a href="{{ url_for('rgz.index') }}">На главную РГЗ</a>
+            <a href="{{ url_for('index') }}">На главную сайта</a>
+            <a href="{{ url_for('rgz.logout') }}" class="logout-btn">Выйти</a>
+        </div>
+        
+        <div class="profile-info">
+            <p><strong>Логин:</strong> {{ user.username }}</p>
+            <p><strong>Имя:</strong> {{ user.name }}</p>
+            <p><strong>Услуга:</strong> {{ user.service_type }}</p>
+            <p><strong>Стаж:</strong> {{ user.experience }} лет</p>
+            <p><strong>Цена:</strong> {{ user.price }} руб.</p>
+            {% if user.about %}
+            <p><strong>О себе:</strong> {{ user.about }}</p>
+            {% endif %}
+            <p><strong>Статус:</strong> {% if user.is_hidden %}Анкета скрыта{% else %}Анкета видна{% endif %}</p>
+            <p><strong>Роль:</strong> {{ user.role }}</p>
+        </div>
+        
+        <div class="edit-form">
+            <h2>Редактировать профиль</h2>
+            
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+            
+            <form method="POST" action="{{ url_for('rgz.edit') }}">
+                <div class="form-group">
+                    <label for="name">Имя:</label>
+                    <input type="text" id="name" name="name" value="{{ user.name }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="service_type">Вид услуги:</label>
+                    <select id="service_type" name="service_type" required>
+                        {% for service in service_types %}
+                            <option value="{{ service }}" {% if service == user.service_type %}selected{% endif %}>
+                                {{ service }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="experience">Стаж (лет):</label>
+                    <input type="number" id="experience" name="experience" value="{{ user.experience }}" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="price">Цена (руб.):</label>
+                    <input type="number" id="price" name="price" value="{{ user.price }}" min="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="about">О себе:</label>
+                    <textarea id="about" name="about">{{ user.about or '' }}</textarea>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="is_hidden" name="is_hidden" {% if user.is_hidden %}checked{% endif %}>
+                    <label for="is_hidden" style="font-weight: normal;">Скрыть мою анкету от поиска</label>
+                </div>
+                
+                <button type="submit" class="btn">Сохранить изменения</button>
+                <a href="{{ url_for('rgz.delete') }}" class="danger-btn" onclick="return confirm('Вы уверены, что хотите удалить свой аккаунт? Это действие нельзя отменить.');">
+                    Удалить аккаунт
+                </a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

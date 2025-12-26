@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Редактирование пользователя - Админ-панель</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .student-info {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .menu {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .menu a {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .menu a:hover {
+            background: #2980b9;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background: #219653;
+        }
+        .cancel-btn {
+            background: #95a5a6;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .cancel-btn:hover {
+            background: #7f8c8d;
+        }
+        .error {
+            color: red;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #ffe6e6;
+            border-radius: 5px;
+        }
+        .user-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .user-info p {
+            margin: 5px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="student-info">
+            <strong>{{ student_name }}</strong> | {{ student_group }} | Админ-панель
+            <br><small>Редактирование пользователя</small>
+        </div>
+        
+        <h1>Редактирование пользователя</h1>
+        
+        <div class="menu">
+            <a href="{{ url_for('rgz.admin') }}">← Назад к списку</a>
+            <a href="{{ url_for('rgz.index') }}">На главную РГЗ</a>
+        </div>
+        
+        <div class="user-info">
+            <p><strong>ID:</strong> {{ user.id }}</p>
+            <p><strong>Логин:</strong> {{ user.username }}</p>
+            <p><strong>Текущее имя:</strong> {{ user.name }}</p>
+            <p><strong>Текущая роль:</strong> {{ user.role }}</p>
+        </div>
+        
+        {% if user.role == 'admin' %}
+        <div class="warning">
+            <strong>Внимание!</strong> Вы редактируете аккаунт администратора. 
+            Будьте осторожны при изменении данных.
+        </div>
+        {% endif %}
+        
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        <form method="POST" action="{{ url_for('rgz.admin_edit', user_id=user.id) }}">
+            <div class="form-group">
+                <label for="username">Логин:</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="name">Имя:</label>
+                <input type="text" id="name" name="name" value="{{ user.name }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="role">Роль:</label>
+                <select id="role" name="role" required>
+                    <option value="user" {% if user.role == 'user' %}selected{% endif %}>Пользователь</option>
+                    <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Администратор</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="service_type">Вид услуги:</label>
+                <select id="service_type" name="service_type" required>
+                    {% for service in service_types %}
+                        <option value="{{ service }}" {% if service == user.service_type %}selected{% endif %}>
+                            {{ service }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="experience">Стаж (лет):</label>
+                <input type="number" id="experience" name="experience" value="{{ user.experience }}" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="price">Цена (руб.):</label>
+                <input type="number" id="price" name="price" value="{{ user.price }}" min="1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="about">О себе:</label>
+                <textarea id="about" name="about">{{ user.about or '' }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="is_hidden" {% if user.is_hidden %}checked{% endif %}>
+                    Скрыть анкету от поиска
+                </label>
+            </div>
+            
+            <button type="submit" class="btn">Сохранить изменения</button>
+            <a href="{{ url_for('rgz.admin') }}" class="cancel-btn">Отмена</a>
+        </form>
+    </div>
+</body>
+</html>
