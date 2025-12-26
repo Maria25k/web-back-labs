@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, session, redirect
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from werkzeug.security import generate_password_hash, check_password_hash  
+from werkzeug.security import generate_password_hash, check_password_hash
 
 lab5 = Blueprint('lab5', __name__)
 
@@ -26,6 +26,7 @@ def main():
     login = session.get('login')
     return render_template('lab5/lab5.html', login=login)
 
+# РЕГИСТРАЦИЯ - безопасно
 @lab5.route('/lab5/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
@@ -39,17 +40,20 @@ def register():
 
     conn, cur = db_connect()
     
+    # БЕЗОПАСНО: параметризованный запрос
     cur.execute("SELECT login FROM users WHERE login=%s", (login,))
     if cur.fetchone():
         db_close(conn, cur)
         return render_template('lab5/register.html', error='Такой пользователь уже существует')
 
     password_hash = generate_password_hash(password)
+    # БЕЗОПАСНО: параметризованный запрос
     cur.execute("INSERT INTO users (login, password) VALUES (%s, %s)", (login, password_hash))
     db_close(conn, cur)
     
     return render_template('lab5/success.html', login=login)
 
+# ВХОД - безопасно
 @lab5.route('/lab5/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -62,6 +66,7 @@ def login():
         return render_template('lab5/login.html', error='Заполните все поля')
 
     conn, cur = db_connect()
+    # БЕЗОПАСНО: параметризованный запрос
     cur.execute("SELECT * FROM users WHERE login=%s", (login,))
     user = cur.fetchone()
     db_close(conn, cur)
@@ -72,14 +77,9 @@ def login():
     session['login'] = login
     return redirect('/lab5')
 
-@lab5.route('/lab5/logout')
-def logout():
-    session.pop('login', None)
-    return redirect('/lab5')
-
+# СОЗДАНИЕ СТАТЬИ - безопасно
 @lab5.route('/lab5/create', methods=['GET', 'POST'])
 def create():
-    # Проверяем авторизацию
     login = session.get('login')
     if not login:
         return redirect('/lab5/login')
@@ -87,22 +87,20 @@ def create():
     if request.method == 'GET':
         return render_template('lab5/create_article.html')
 
-    # Получаем данные из формы
     title = request.form.get('title')
     article_text = request.form.get('article_text')
 
     if not (title and article_text):
         return render_template('lab5/create_article.html', error='Заполните все поля')
 
-    # Подключаемся к БД
     conn, cur = db_connect()
 
-    # Находим ID пользователя
+    # БЕЗОПАСНО: параметризованный запрос
     cur.execute("SELECT id FROM users WHERE login=%s", (login,))
     user = cur.fetchone()
     user_id = user['id']
 
-    # Вставляем статью
+    # БЕЗОПАСНО: параметризованный запрос
     cur.execute("""
         INSERT INTO articles (user_id, title, article_text, is_favorite, is_public, likes) 
         VALUES (%s, %s, %s, %s, %s, %s)
@@ -111,26 +109,29 @@ def create():
     db_close(conn, cur)
     return redirect('/lab5')
 
+# ВЫВОД СТАТЕЙ - безопасно
 @lab5.route('/lab5/list')
 def articles_list():
-    # Проверяем авторизацию
     login = session.get('login')
     if not login:
         return redirect('/lab5/login')
 
-    # Подключаемся к БД
     conn, cur = db_connect()
 
-    # Находим ID текущего пользователя
+    # БЕЗОПАСНО: параметризованный запрос
     cur.execute("SELECT id FROM users WHERE login=%s", (login,))
     user = cur.fetchone()
     user_id = user['id']
 
-    # Получаем все статьи этого пользователя
+    # БЕЗОПАСНО: параметризованный запрос
     cur.execute("SELECT * FROM articles WHERE user_id=%s", (user_id,))
     articles = cur.fetchall()
 
     db_close(conn, cur)
-
-    # Передаём статьи в шаблон
     return render_template('lab5/articles.html', articles=articles, login=login)
+
+# ВЫХОД
+@lab5.route('/lab5/logout')
+def logout():
+    session.pop('login', None)
+    return redirect('/lab5')
