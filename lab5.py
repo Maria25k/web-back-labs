@@ -76,3 +76,37 @@ def login():
 def logout():
     session.pop('login', None)
     return redirect('/lab5')
+
+@lab5.route('/lab5/create', methods=['GET', 'POST'])
+def create():
+    # Проверяем авторизацию
+    login = session.get('login')
+    if not login:
+        return redirect('/lab5/login')
+
+    if request.method == 'GET':
+        return render_template('lab5/create_article.html')
+
+    # Получаем данные из формы
+    title = request.form.get('title')
+    article_text = request.form.get('article_text')
+
+    if not (title and article_text):
+        return render_template('lab5/create_article.html', error='Заполните все поля')
+
+    # Подключаемся к БД
+    conn, cur = db_connect()
+
+    # Находим ID пользователя
+    cur.execute("SELECT id FROM users WHERE login=%s", (login,))
+    user = cur.fetchone()
+    user_id = user['id']
+
+    # Вставляем статью
+    cur.execute("""
+        INSERT INTO articles (user_id, title, article_text, is_favorite, is_public, likes) 
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (user_id, title, article_text, False, False, 0))
+
+    db_close(conn, cur)
+    return redirect('/lab5')
