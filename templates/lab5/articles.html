@@ -3,114 +3,48 @@
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-<style>
-    .articles-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-    
-    .article-card {
-        background: #f9f9f9;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 20px;
-        position: relative;
-    }
-    
-    .article-title {
-        color: #333;
-        margin-top: 0;
-        border-bottom: 2px solid #ff0077;
-        padding-bottom: 10px;
-    }
-    
-    .article-text {
-        color: #666;
-        line-height: 1.6;
-        white-space: pre-wrap;
-    }
-    
-    .article-actions {
-        margin-top: 15px;
-        display: flex;
-        gap: 10px;
-    }
-    
-    .btn {
-        padding: 8px 16px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 14px;
-    }
-    
-    .btn-edit {
-        background: #007bff;
-        color: white;
-    }
-    
-    .btn-delete {
-        background: #dc3545;
-        color: white;
-    }
-    
-    .btn:hover {
-        opacity: 0.8;
-    }
-    
-    .empty-message {
-        text-align: center;
-        color: #666;
-        font-size: 18px;
-        margin: 50px 0;
-    }
-    
-    .user-info {
-        text-align: right;
-        margin-bottom: 20px;
-        color: #ff0077;
-        font-weight: bold;
-    }
-    
-    .logout-btn {
-        background: #6c757d;
-        color: white;
-        padding: 5px 10px;
-        text-decoration: none;
-        border-radius: 4px;
-        font-size: 14px;
-    }
-</style>
-
-<div class="articles-container">
-    <div class="user-info">
-        {% if login %}
-            {{ login }} | <a href="/lab5/logout" class="logout-btn">Выйти</a>
-        {% endif %}
-    </div>
+    <style>
+        .article {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        .article h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .article .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .no-articles {
+            font-style: italic;
+            color: #888;
+        }
+    </style>
 
     <h1>Мои статьи</h1>
-    
+
     {% if articles %}
         {% for article in articles %}
-            <div class="article-card">
-                <h2 class="article-title">{{ article['title'] }}</h2>
-                <div class="article-text">{{ article['article_text'] }}</div>
-                <div class="article-actions">
-                    <a href="/lab5/edit/{{ article['id'] }}" class="btn btn-edit">Редактировать</a>
-                    <form action="/lab5/delete/{{ article['id'] }}" method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-delete" onclick="return confirm('Удалить эту статью?')">Удалить</button>
-                    </form>
+            <div class="article">
+                <h2>{{ article['title'] }}</h2>
+                <div class="meta">
+                    ID: {{ article['id'] }} | 
+                    Публичная: {{ 'Да' if article['is_public'] else 'Нет' }} | 
+                    Избранная: {{ 'Да' if article['is_favorite'] else 'Нет' }} | 
+                    Лайков: {{ article['likes'] }}
+                </div>
+                <div class="text">
+                    {{ article['article_text'] | replace('\r\n', '<br>') | safe }}
                 </div>
             </div>
         {% endfor %}
     {% else %}
-        <div class="empty-message">
-            У вас пока нет статей. <a href="/lab5/create">Создайте первую статью!</a>
-        </div>
+        <p class="no-articles">У вас пока нет статей. <a href="/lab5/create">Создайте первую!</a></p>
     {% endif %}
-</div>
+
+    <p><a href="/lab5">Вернуться на главную</a></p>
 {% endblock %}

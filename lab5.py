@@ -110,3 +110,27 @@ def create():
 
     db_close(conn, cur)
     return redirect('/lab5')
+
+@lab5.route('/lab5/list')
+def articles_list():
+    # Проверяем авторизацию
+    login = session.get('login')
+    if not login:
+        return redirect('/lab5/login')
+
+    # Подключаемся к БД
+    conn, cur = db_connect()
+
+    # Находим ID текущего пользователя
+    cur.execute("SELECT id FROM users WHERE login=%s", (login,))
+    user = cur.fetchone()
+    user_id = user['id']
+
+    # Получаем все статьи этого пользователя
+    cur.execute("SELECT * FROM articles WHERE user_id=%s", (user_id,))
+    articles = cur.fetchall()
+
+    db_close(conn, cur)
+
+    # Передаём статьи в шаблон
+    return render_template('lab5/articles.html', articles=articles, login=login)
