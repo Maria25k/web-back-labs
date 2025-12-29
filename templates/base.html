@@ -17,33 +17,58 @@
             {% endif %}
             margin: 0;
             padding: 20px;
-            transition: all 0.3s ease; 
+            transition: all 0.3s ease;
+        }
+        
         .error {
             color: red;
             font-size: 0.9em;
             margin-top: 5px;
             display: block;
         }
+        
         header {
             background-color: #f0f0f0;
             padding: 15px;
             margin-bottom: 20px;
             border-radius: 5px;
         }
+        
         footer {
             margin-top: 30px;
             padding-top: 15px;
             border-top: 2px solid #ccc;
             font-size: 0.9em;
         }
+        
         main {
             min-height: 400px;
+        }
+        
+        nav {
+            margin-top: 10px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #0066cc;
+            margin: 0 10px;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: #e0e0e0;
+            text-decoration: underline;
         }
     </style>
     
     <link rel="icon" href="{{ url_for('static', filename='my_favicon.jpg') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='my_favicon.gp') }}">
     
+    <!-- Блок для дополнительных скриптов и стилей из шаблонов-наследников -->
+    {% block head %}{% endblock %}
 </head>
 <body>
     <header>
@@ -66,5 +91,8 @@
     <footer>
         &copy; Юсупова Мария Леонидовна, ФБИ-34, 3 курс, 2025 год
     </footer>
+
+    <!-- Блок для JavaScript кода из шаблонов-наследников (для lab6) -->
+    {% block script %}{% endblock %}
 </body>
 </html>
