@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 9{% endblock %}
+
+{% block main %}
+<div class="container">
+    <h1>🎄 Новогодние Подарки 🎄</h1>
+    
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-label">Открыто коробок:</div>
+            <div class="stat-value" id="opened-count">{{ opened_count }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Осталось открыть:</div>
+            <div class="stat-value" id="remaining-count">{{ remaining }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Всего коробок:</div>
+            <div class="stat-value" id="total-boxes">{{ total_boxes }}</div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        {% if is_authenticated %}
+        <button class="santa-btn" onclick="resetBoxes()" id="reset-btn">
+            🎅 Дед Мороз (наполнить все коробки)
+        </button>
+        {% endif %}
+    </div>
+    
+    <div class="error-message" id="error-message"></div>
+    <div class="success-message" id="success-message"></div>
+    
+    <div class="boxes-container" id="boxes-container">
+        <!-- Коробки будут добавлены через JavaScript -->
+    </div>
+</div>
+
+<div class="modal" id="gift-modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">×</span>
+        <h2>🎁 Ваш подарок! 🎁</h2>
+        <div class="gift-display" id="modal-gift"></div>
+        <div class="congratulation-text" id="modal-congratulation"></div>
+        <button class="santa-btn" onclick="closeModal()">Закрыть</button>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    h1 {
+        text-align: center;
+        color: #c62828;
+        margin-bottom: 30px;
+    }
+    
+    .stats {
+        background-color: #f5f5f5;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+    
+    .stat-item {
+        text-align: center;
+        margin: 5px 10px;
+    }
+    
+    .stat-label {
+        font-size: 14px;
+        color: #666;
+    }
+    
+    .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #c62828;
+    }
+    
+    .boxes-container {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    @media (max-width: 768px) {
+        .boxes-container {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .boxes-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    .box {
+        aspect-ratio: 1;
+        background-color: #c62828;
+        border: 3px solid #ff9800;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        font-size: 30px;
+        color: white;
+    }
+    
+    .box:hover:not(.opened) {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 152, 0, 0.5);
+        background-color: #d32f2f;
+    }
+    
+    .box.opened {
+        background-color: #4caf50;
+        cursor: default;
+    }
+    
+    .box-number {
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .box.opened .box-number {
+        display: none;
+    }
+    
+    .gift-icon {
+        font-size: 40px;
+    }
+    
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .modal-content {
+        background-color: white;
+        padding: 30px;
+        border-radius: 15px;
+        border: 3px solid #ff9800;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+        position: relative;
+    }
+    
+    .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #666;
+    }
+    
+    .gift-display {
+        font-size: 80px;
+        margin: 20px 0;
+    }
+    
+    .congratulation-text {
+        font-size: 18px;
+        margin: 20px 0;
+        line-height: 1.5;
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 10px;
+    }
+    
+    .santa-btn {
+        background-color: #c62828;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+    }
+    
+    .santa-btn:hover {
+        background-color: #d32f2f;
+    }
+    
+    .error-message {
+        background-color: #ffebee;
+        color: #c62828;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px auto;
+        max-width: 500px;
+        display: none;
+        border: 1px solid #ffcdd2;
+    }
+    
+    .success-message {
+        background-color: #e8f5e8;
+        color: #2e7d32;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px auto;
+        max-width: 500px;
+        display: none;
+        border: 1px solid #c8e6c9;
+    }
+    
+    .controls {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+</style>
+
+<script>
+    // Функция для загрузки состояния коробок
+    async function loadBoxes() {
+        try {
+            console.log('Загружаем коробки...');
+            const response = await fetch('/lab9/api/get_boxes');
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log('Данные получены:', data);
+            
+            document.getElementById('opened-count').textContent = data.total_opened;
+            document.getElementById('remaining-count').textContent = data.remaining;
+            document.getElementById('total-boxes').textContent = data.total_boxes;
+            
+            renderBoxes(data.boxes);
+        } catch (error) {
+            console.error('Ошибка при загрузке коробок:', error);
+            showError('Не удалось загрузить коробки: ' + error.message);
+        }
+    }
+    
+    // Функция для отрисовки коробок
+    function renderBoxes(boxes) {
+        const container = document.getElementById('boxes-container');
+        container.innerHTML = '';
+        
+        boxes.forEach(box => {
+            const boxElement = document.createElement('div');
+            boxElement.className = `box ${box.opened ? 'opened' : ''}`;
+            boxElement.dataset.id = box.id;
+            
+            if (box.opened) {
+                // Для открытой коробки показываем подарок
+                fetch(`/lab9/api/get_box_content/${box.id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const giftIcon = document.createElement('div');
+                        giftIcon.className = 'gift-icon';
+                        giftIcon.textContent = data.gift;
+                        boxElement.appendChild(giftIcon);
+                    });
+            } else {
+                // Для закрытой коробки показываем номер
+                const number = document.createElement('div');
+                number.className = 'box-number';
+                number.textContent = box.id + 1;
+                boxElement.appendChild(number);
+                
+                // Добавляем обработчик клика
+                boxElement.onclick = () => openBox(box.id);
+            }
+            
+            container.appendChild(boxElement);
+        });
+    }
+    
+    // Функция для открытия коробки
+    async function openBox(boxId) {
+        try {
+            console.log('Открываем коробку:', boxId);
+            const response = await fetch('/lab9/api/open_box', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ box_id: boxId })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Показываем подарок
+                document.getElementById('modal-gift').textContent = data.gift;
+                document.getElementById('modal-congratulation').textContent = data.congratulation;
+                document.getElementById('gift-modal').style.display = 'flex';
+                
+                // Обновляем статистику
+                document.getElementById('opened-count').textContent = data.opened_count;
+                document.getElementById('remaining-count').textContent = data.remaining;
+                
+                // Перезагружаем коробки
+                loadBoxes();
+                
+                // Показываем сообщение об успехе
+                if (data.remaining === 0) {
+                    showSuccess('Вы открыли все доступные коробки! С Новым Годом!');
+                }
+            } else {
+                showError(data.error || 'Ошибка при открытии коробки');
+            }
+        } catch (error) {
+            console.error('Ошибка при открытии коробки:', error);
+            showError('Не удалось открыть коробку');
+        }
+    }
+    
+    // Функция для сброса всех коробок
+    async function resetBoxes() {
+        if (!confirm('Дед Мороз наполнит все коробки заново. Вы уверены?')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch('/lab9/api/reset_boxes', {
+                method: 'POST'
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                showSuccess(data.message);
+                loadBoxes();
+            } else {
+                showError('Не удалось сбросить коробки');
+            }
+        } catch (error) {
+            console.error('Ошибка при сбросе коробок:', error);
+            showError('Не удалось сбросить коробки');
+        }
+    }
+    
+    // Функция для закрытия модального окна
+    function closeModal() {
+        document.getElementById('gift-modal').style.display = 'none';
+    }
+    
+    // Функция для показа ошибки
+    function showError(message) {
+        const errorEl = document.getElementById('error-message');
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+        
+        setTimeout(() => {
+            errorEl.style.display = 'none';
+        }, 5000);
+    }
+    
+    // Функция для показа успешного сообщения
+    function showSuccess(message) {
+        const successEl = document.getElementById('success-message');
+        successEl.textContent = message;
+        successEl.style.display = 'block';
+        
+        setTimeout(() => {
+            successEl.style.display = 'none';
+        }, 5000);
+    }
+    
+    // Инициализация при загрузке страницы
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('Страница загружена, загружаем коробки...');
+        loadBoxes();
+        
+        // Закрытие модального окна
+        document.getElementById('gift-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'gift-modal') {
+                closeModal();
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    });
+</script>
+{% endblock %}

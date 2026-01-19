@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, url_for
 from flask_login import LoginManager
 import datetime
@@ -15,6 +16,7 @@ from lab5 import lab5
 from lab6 import lab6
 from lab7 import lab7
 from lab8 import lab8
+from lab9 import lab9  # Добавлен импорт lab9
 from rgz import rgz
 from db import db
 from db.models import users
@@ -60,6 +62,7 @@ app.register_blueprint(lab5)
 app.register_blueprint(lab6)
 app.register_blueprint(lab7)
 app.register_blueprint(lab8)
+app.register_blueprint(lab9)  # Добавлена регистрация lab9
 app.register_blueprint(rgz)
 
 # Создание таблиц при первом запуске
@@ -86,6 +89,7 @@ def index():
             <li><a href="/lab6/">Шестая лабораторная</a></li>
             <li><a href="/lab7/">Седьмая лабораторная</a></li>
             <li><a href="/lab8/">Восьмая лабораторная</a></li>
+            <li><a href="/lab9/">Девятая лабораторная</a></li>  <!-- Добавлена ссылка -->
             <li><a href="/rgz/">Расчетно графическое задание</a></li>             
         </ul>
         <footer>
