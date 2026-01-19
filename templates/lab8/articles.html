@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8 - Мои статьи{% endblock %}
+
+{% block main %}
+<h1>Статьи</h1>
+
+<div style="margin-bottom: 20px;">
+    <a href="/lab8/create">
+        <button>Создать новую статью</button>
+    </a>
+    
+    <form action="/lab8/search" method="get" style="display: inline-block; margin-left: 20px;">
+        <input type="text" name="q" placeholder="Поиск статей..." style="padding: 8px; width: 300px;">
+        <button type="submit">Найти</button>
+    </form>
+</div>
+
+<h2>Мои статьи</h2>
+<div class="article-list">
+    {% if user_articles %}
+        {% for article in user_articles %}
+            <div class="article-item">
+                <div class="article-title">{{ article.title }}</div>
+                <div class="article-meta">
+                    {% if article.is_favorite %}⭐ Избранная | {% endif %}
+                    {% if article.is_public %}🌐 Публичная | {% endif %}
+                    👍 {{ article.likes }} лайков
+                </div>
+                <div>{{ article.article_text[:200] }}{% if article.article_text|length > 200 %}...{% endif %}</div>
+                <div class="article-actions">
+                    <a href="/lab8/edit/{{ article.id }}">✏️ Редактировать</a>
+                    <a href="/lab8/delete/{{ article.id }}" 
+                       onclick="return confirm('Вы уверены, что хотите удалить эту статью?')">🗑️ Удалить</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>У вас пока нет статей. <a href="/lab8/create">Создайте первую!</a></p>
+    {% endif %}
+</div>
+
+{% if public_articles %}
+    <h2>Публичные статьи других пользователей</h2>
+    <div class="article-list">
+        {% for article in public_articles %}
+            <div class="article-item">
+                <div class="article-title">{{ article.title }}</div>
+                <div class="article-meta">
+                    👍 {{ article.likes }} лайков
+                </div>
+                <div>{{ article.article_text[:200] }}{% if article.article_text|length > 200 %}...{% endif %}</div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

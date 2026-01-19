@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8{% endblock %}
+
+{% block main %}
+<h1>База знаний</h1>
+
+<div style="text-align: center; margin: 40px 0;">
+    <img src="{{ url_for('static', filename='lab8_banner.jpg') }}" 
+         alt="База знаний" 
+         style="max-width: 80%; height: auto; border-radius: 10px;">
+</div>
+
+<div style="text-align: center;">
+    <h2>Добро пожаловать в систему управления знаниями!</h2>
+    
+    <div style="margin: 30px 0;">
+        {% if current_user.is_authenticated %}
+            <p>Вы вошли как: <strong>{{ current_user.login }}</strong></p>
+            <div style="margin-top: 20px;">
+                <a href="/lab8/articles/" style="margin: 10px;">
+                    <button>Мои статьи</button>
+                </a>
+                <a href="/lab8/create" style="margin: 10px;">
+                    <button>Создать статью</button>
+                </a>
+            </div>
+        {% else %}
+            <p>Для работы с системой необходимо авторизоваться</p>
+            <div style="margin-top: 20px;">
+                <a href="/lab8/login" style="margin: 10px;">
+                    <button>Войти</button>
+                </a>
+                <a href="/lab8/register/" style="margin: 10px;">
+                    <button>Зарегистрироваться</button>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div style="margin-top: 40px; padding: 20px; background-color: #f5f5f5; border-radius: 10px;">
+    <h3>Возможности системы:</h3>
+    <ul>
+        <li>Создание и управление статьями</li>
+        <li>Возможность делать статьи публичными</li>
+        <li>Поиск по статьям</li>
+        <li>Редактирование и удаление статей</li>
+        <li>Безопасная аутентификация пользователей</li>
+    </ul>
+</div>
+{% endblock %}

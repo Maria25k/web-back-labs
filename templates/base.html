@@ -27,6 +27,13 @@
             display: block;
         }
         
+        .success {
+            color: green;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: block;
+        }
+        
         header {
             background-color: #f0f0f0;
             padding: 15px;
@@ -62,6 +69,98 @@
             background-color: #e0e0e0;
             text-decoration: underline;
         }
+        
+        .article-list {
+            margin-top: 20px;
+        }
+        
+        .article-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .article-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .article-meta {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .article-actions {
+            margin-top: 10px;
+        }
+        
+        .article-actions a {
+            margin-right: 10px;
+        }
+        
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        
+        button:hover {
+            background-color: #0055aa;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .user-info {
+            float: right;
+            font-weight: bold;
+        }
     </style>
     
     <link rel="icon" href="{{ url_for('static', filename='my_favicon.jpg') }}">
@@ -73,6 +172,15 @@
 <body>
     <header>
         WEB-программирование, часть 2. {{ self.lab() }} | 
+        <span class="user-info">
+            {% if current_user.is_authenticated %}
+                Привет, {{ current_user.login }} | 
+                <a href="/lab8/logout">Выйти</a>
+            {% else %}
+                <a href="/lab8/login">Войти</a> | 
+                <a href="/lab8/register/">Регистрация</a>
+            {% endif %}
+        </span>
         <nav>
             <a href="/">Главное меню</a> |
             <a href="/lab1/">Лабораторная 1</a> |
@@ -81,7 +189,8 @@
             <a href="/lab4/">Лабораторная 4</a> |
             <a href="/lab5/">Лабораторная 5</a> |
             <a href="/lab6/">Лабораторная 6</a> |
-            <a href="/lab7/">Лабораторная 7</a>
+            <a href="/lab7/">Лабораторная 7</a> |
+            <a href="/lab8/">Лабораторная 8</a>
         </nav>
     </header>
 

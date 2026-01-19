@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8 - Поиск статей{% endblock %}
+
+{% block main %}
+<h1>Результаты поиска: "{{ query }}"</h1>
+
+<a href="/lab8/articles/">
+    <button style="margin-bottom: 20px;">← Назад к списку статей</button>
+</a>
+
+{% if results %}
+    <div class="article-list">
+        {% for article in results %}
+            <div class="article-item">
+                <div class="article-title">{{ article.title }}</div>
+                <div class="article-meta">
+                    {% if article.login_id == current_user.id %}
+                        👤 Моя статья | 
+                    {% endif %}
+                    {% if article.is_favorite %}⭐ Избранная | {% endif %}
+                    {% if article.is_public %}🌐 Публичная | {% endif %}
+                    👍 {{ article.likes }} лайков
+                </div>
+                <div>{{ article.article_text[:200] }}{% if article.article_text|length > 200 %}...{% endif %}</div>
+                
+                {% if article.login_id == current_user.id %}
+                    <div class="article-actions">
+                        <a href="/lab8/edit/{{ article.id }}">✏️ Редактировать</a>
+                        <a href="/lab8/delete/{{ article.id }}" 
+                           onclick="return confirm('Вы уверены, что хотите удалить эту статью?')">🗑️ Удалить</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>По вашему запросу ничего не найдено.</p>
+{% endif %}
+{% endblock %}

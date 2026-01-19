@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8 - Публичные статьи{% endblock %}
+
+{% block main %}
+<div class="articles-container">
+    <h1>Публичные статьи</h1>
+    
+    {% if articles %}
+        <div class="articles-list">
+            {% for article in articles %}
+                <div class="article-card">
+                    <h3>{{ article.title }}</h3>
+                    <p>{{ article.article_text[:200] }}{% if article.article_text|length > 200 %}...{% endif %}</p>
+                    <div class="article-meta">
+                        <span>Автор: {{ article.user.login }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Публичных статей пока нет.</p>
+    {% endif %}
+    
+    <div class="actions">
+        <a href="{{ url_for('lab8.main') }}" class="btn-back">На главную</a>
+    </div>
+</div>
+
+<style>
+    .articles-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .articles-list {
+        margin-top: 20px;
+    }
+    
+    .article-card {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .article-card h3 {
+        margin-top: 0;
+        color: #333;
+    }
+    
+    .article-meta {
+        margin-top: 10px;
+        font-size: 0.9em;
+        color: #666;
+        font-style: italic;
+    }
+    
+    .btn-back {
+        background-color: #6c757d;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        display: inline-block;
+        margin-top: 20px;
+    }
+    
+    .btn-back:hover {
+        background-color: #5a6268;
+    }
+</style>
+{% endblock %}
